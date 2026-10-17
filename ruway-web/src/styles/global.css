@@ -1,0 +1,278 @@
+/* ============================================================================
+   RUWAY · Estilos globales
+   Consume los tokens de ./tokens.css. Sin colores literales: solo tokens.
+   ========================================================================= */
+@import "./tokens.css";
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* Evita que el header fijo tape los deep-links con ancla (WCAG 2.4.11) */
+    --altura-header: 4.5rem;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--ruway-fondo);
+    color: var(--ruway-texto);
+    font-family: var(--font-sans);
+    font-size: var(--text-cuerpo);
+    line-height: 1.65;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  img,
+  video {
+    height: auto;
+  }
+
+  a {
+    color: var(--ruway-acento);
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.22em;
+  }
+
+  a:hover {
+    text-decoration-thickness: 0.14em;
+  }
+
+  /* Todos los destinos de ancla dejan aire bajo el header fijo */
+  [id] {
+    scroll-margin-top: calc(var(--altura-header) + 1rem);
+  }
+
+  summary {
+    cursor: pointer;
+  }
+
+  /* Los precios y datos usan la monoespaciada con cifras tabulares */
+  .dato {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ============================================================================
+   UTILIDADES
+   ========================================================================= */
+@layer utilities {
+  /* Enlace "saltar al contenido". Oculto hasta recibir foco (WCAG 2.4.1) */
+  .saltar-enlace {
+    position: absolute;
+    left: 0.75rem;
+    top: -100%;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    background-color: var(--color-maiz);
+    color: var(--ruway-sobre-cta);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: top var(--dur-rapida) var(--ease-salida);
+  }
+
+  .saltar-enlace:focus-visible {
+    top: 0.75rem;
+  }
+
+  /* Solo para lectores de pantalla */
+  .visualmente-oculto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---------------------------------------------------------------------
+     Intercambio de activos por tema
+     Permite servir la variante correcta del logo (y de los iconos) sin
+     JavaScript. Ejemplo: el logo «claro» para fondos claros y el «oscuro»
+     para fondos oscuros, exactamente como manda el manual de marca.
+     --------------------------------------------------------------------- */
+  .solo-claro {
+    display: block;
+  }
+
+  .solo-oscuro {
+    display: none;
+  }
+
+  :root[data-tema="oscuro"] .solo-claro {
+    display: none;
+  }
+
+  :root[data-tema="oscuro"] .solo-oscuro {
+    display: block;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema]) .solo-claro {
+      display: none;
+    }
+
+    :root:not([data-tema]) .solo-oscuro {
+      display: block;
+    }
+  }
+
+  /* Resplandor sutil de marca (no usa imágenes ni degradados arcoíris) */
+  .halo-maiz {
+    background-image: radial-gradient(
+      circle at 50% 0%,
+      color-mix(in srgb, var(--color-maiz) 16%, transparent),
+      transparent 62%
+    );
+  }
+}
+
+/* ============================================================================
+   MOVIMIENTO
+   Definido ÚNICAMENTE cuando el usuario NO pidió reducir movimiento.
+   Con `prefers-reduced-motion: reduce`, los elementos aparecen ya visibles.
+   ========================================================================= */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dibujar-trazo {
+  from {
+    stroke-dashoffset: var(--trazo-largo, 400);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* El símbolo de RUWAY es un trazo RELLENO, no una línea: por eso no se puede
+   «dibujar» con stroke-dashoffset. Se revela de abajo hacia arriba, que es
+   exactamente el sentido del símbolo: una escalera que sube. El punto, arriba
+   del todo, es lo último que aparece. */
+@keyframes subir-escalones {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* El escalón de la sección «El camino» crece de izquierda a derecha */
+@keyframes crecer-escalon {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .anim-aparecer {
+    animation: aparecer var(--dur-lenta) var(--ease-salida) both;
+  }
+
+  /* El trazo escalonado del isotipo se «construye»: motion con significado
+     (el camino se arma paso a paso), no decoración. */
+  .anim-trazo {
+    stroke-dasharray: var(--trazo-largo, 400);
+    animation: dibujar-trazo 1.6s var(--ease-suave) both;
+  }
+
+  .anim-escalones {
+    animation: subir-escalones 1.5s var(--ease-suave) both;
+  }
+
+  .anim-escalon {
+    transform-origin: left center;
+    animation: crecer-escalon 0.9s var(--ease-salida) both;
+  }
+}
+
+/* ============================================================================
+   ACCESIBILIDAD — REGLAS SIN CAPA (sin @layer)
+   ----------------------------------------------------------------------------
+   Estas reglas van fuera de @layer a propósito. En la cascada, los estilos sin
+   capa tienen prioridad sobre cualquier capa —incluida `utilities` de
+   Tailwind—, así que ninguna clase de utilidad puede anularlas por accidente.
+
+   Motivo real: la regla de «página actual» vivía dentro de @layer base y
+   `.no-underline` (capa utilities) la anulaba en silencio, de modo que el
+   enlace de la página actual quedaba sin ninguna marca visual y el estado se
+   distinguía solo por color. Ver decisions.md (ADR-011).
+   ========================================================================= */
+
+/* Página actual. Subrayado ADEMÁS de cualquier diferencia de color: el estado
+   nunca puede depender solo del color (WCAG 2.2 · 1.4.1). No se cambia el
+   grosor de la tipografía para no provocar un salto de anchura al navegar. */
+a[aria-current="page"] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.4em;
+}
+
+/* FOCO VISIBLE (WCAG 2.2 · 2.4.7 y 2.4.11).
+   Anillo de 3 px con separación: se distingue sobre fondos claros y oscuros,
+   sea cual sea el color del elemento enfocado. */
+:focus-visible {
+  outline: 3px solid var(--ruway-foco);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* OBJETIVOS TÁCTILES (WCAG 2.2 · 2.5.8).
+   Mínimo exigido: 24 × 24 px. Se fija 44 px, que además es el tamaño cómodo
+   para el pulgar. */
+button,
+[role="button"],
+summary,
+a.boton {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}

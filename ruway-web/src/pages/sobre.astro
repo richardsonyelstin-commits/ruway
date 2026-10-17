@@ -1,0 +1,179 @@
+---
+/**
+ * /sobre — quién está detrás y por qué existe esto.
+ *
+ * Anclas del sitemap §8: `#identidad` · `#metodo` · `#sede` · `#equipo`.
+ *
+ * ⚠️ REGLA DE PUBLICACIÓN
+ *   El §9 del plan (equipo y roles) es un documento INTERNO: lleva tarifas por
+ *   hora, comisiones por matrícula y un rol «por asignar». Nada de eso se
+ *   publica. Aquí solo va lo que un visitante necesita saber: quién enseña, con
+ *   qué experiencia y con qué apoyos cuenta el grupo.
+ *
+ * `#metodo` (el enfoque de la academia) y `#metodologia` (la mecánica de clase,
+ * en /programa) son páginas y conceptos distintos, como fija el sitemap.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import Seccion from '../components/Seccion.astro';
+import Cierre from '../components/Cierre.astro';
+import Icono from '../components/Icono.astro';
+import { conInicio } from '../lib/migajas';
+import { jsonLdNegocioLocal } from '../lib/datos-estructurados';
+import { DIRECCION_UNA_LINEA, ENLACE_MAPA, SITIO } from '../data/site';
+import { ENFOQUE, EQUIPO, IDENTIDAD, NO_SOMOS, PROGRAMA, SEDE } from '../data/programa';
+
+const migajas = conInicio({ etiqueta: 'Sobre', href: '/sobre' });
+
+const titulo = 'Sobre RUWAY ACADEMY, escuela de IA en Cajamarca';
+const descripcion =
+  'Quiénes somos: una academia presencial en Cajamarca para aprender IA aplicada paso a paso. Nuestra misión, el método, la sede y quién enseña.';
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="Quiénes somos"
+  h1="Una academia de barrio con una ambición seria"
+  entrada={`RUWAY ACADEMY abre su primer ciclo el ${SITIO.ciclo1.inicioTextoCompleto} en ${DIRECCION_UNA_LINEA}. Es una academia nueva: no vamos a fingir testimonios que todavía no existen.`}
+  migajas={migajas}
+  jsonLd={jsonLdNegocioLocal()}
+>
+  {/* ───────────────────────────── Identidad ───────────────────────────── */}
+  <Seccion id="identidad" eyebrow="El nombre" titulo="Ruway significa camino">
+    <div class="grid gap-8 lg:grid-cols-[1fr_1fr]">
+      <div>
+        <p class="text-cuerpo text-pretty text-texto">{IDENTIDAD.significado}</p>
+        <p class="mt-4 text-cuerpo text-pretty text-texto-suave">{IDENTIDAD.eslogan}</p>
+
+        <dl class="mt-8 grid gap-6">
+          <div class="border-l-4 border-maiz pl-5">
+            <dt class="font-mono text-micro tracking-[0.16em] text-texto-suave uppercase">
+              Misión
+            </dt>
+            <dd class="mt-2 text-cuerpo text-pretty text-texto">{IDENTIDAD.mision}</dd>
+          </div>
+          <div class="border-l-4 border-ichu pl-5">
+            <dt class="font-mono text-micro tracking-[0.16em] text-texto-suave uppercase">
+              Visión
+            </dt>
+            <dd class="mt-2 text-cuerpo text-pretty text-texto">{IDENTIDAD.vision}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="rounded-marca border border-borde bg-superficie p-6 md:p-8">
+        <h3 class="font-display text-titulo-3">Lo que no somos</h3>
+        <p class="mt-2 text-pequeno text-texto-suave">
+          Decirlo por adelantado ahorra una conversación incómoda a los dos lados.
+        </p>
+        <ul class="mt-4 list-none space-y-3 p-0">
+          {
+            NO_SOMOS.map((limite) => (
+              <li class="flex items-start gap-3 text-pequeno text-texto">
+                <span class="mt-0.5 shrink-0 text-alerta">
+                  <Icono nombre="chevron" clase="size-4" grosor={2.4} />
+                </span>
+                {limite}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Seccion>
+
+  {/* ────────────────────────────── Método ─────────────────────────────── */}
+  <Seccion
+    id="metodo"
+    tono="superficie"
+    eyebrow="El método"
+    titulo="Cuatro decisiones que explican todo lo demás"
+    entrada={`${PROGRAMA.nombreCorto} no es un curso grabado ni una academia de paso. Es un sitio al que vas, con gente, durante ocho semanas.`}
+  >
+    <ol class="grid list-none gap-5 p-0 md:grid-cols-2">
+      {
+        ENFOQUE.map((principio, indice) => (
+          <li class="flex gap-5 rounded-marca border border-borde bg-fondo p-6">
+            <p
+              class="dato shrink-0 font-display text-titulo-2 leading-none font-semibold text-acento"
+              aria-hidden="true"
+            >
+              {String(indice + 1).padStart(2, '0')}
+            </p>
+            <div>
+              <h3 class="font-display text-titulo-3 text-balance">{principio.titulo}</h3>
+              <p class="mt-2 text-pequeno text-pretty text-texto-suave">{principio.texto}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Seccion>
+
+  {/* ─────────────────────────────── Sede ──────────────────────────────── */}
+  <Seccion
+    id="sede"
+    eyebrow="La sede"
+    titulo="Cajamarca, con dirección verificable"
+    entrada="Publicamos la dirección exacta porque una academia presencial que no dice dónde queda no genera confianza."
+  >
+    <div class="grid gap-5 md:grid-cols-2">
+      <div class="rounded-marca border border-borde bg-superficie p-6">
+        <h3 class="flex items-center gap-2.5 font-display text-titulo-3">
+          <span class="text-acento"><Icono nombre="mapa" clase="size-5" /></span>
+          Dirección
+        </h3>
+        <address class="mt-3 text-cuerpo not-italic text-texto">
+          {SITIO.sede.calle}<br />
+          {SITIO.sede.distrito}, {SITIO.sede.pais}
+        </address>
+        <p class="mt-3 text-pequeno text-texto-suave">{SEDE.referencia}</p>
+        <p class="mt-4 text-pequeno">
+          <a href={ENLACE_MAPA} rel="noopener noreferrer" target="_blank">
+            Ver la ubicación en Google Maps
+          </a>
+        </p>
+      </div>
+
+      <div class="rounded-marca border border-borde bg-superficie p-6">
+        <h3 class="flex items-center gap-2.5 font-display text-titulo-3">
+          <span class="text-acento"><Icono nombre="reloj" clase="size-5" /></span>
+          Horario de clases
+        </h3>
+        <p class="mt-3 text-cuerpo text-texto">
+          {SEDE.horario}<br />
+          <span class="dato">{SEDE.horarioDetalle}</span>
+        </p>
+        <p class="mt-3 text-pequeno text-texto-suave">
+          Ocho semanas continuas, con dos sesiones de reposición reservadas para feriados o fallas
+          de servicio. El calendario definitivo se entrega en la matrícula.
+        </p>
+      </div>
+    </div>
+  </Seccion>
+
+  {/* ───────────────────────────── Equipo ──────────────────────────────── */}
+  <Seccion
+    id="equipo"
+    tono="superficie"
+    eyebrow="Quién enseña"
+    titulo="Un docente y grupos pequeños"
+    entrada="No hay una plana docente anónima: hay una persona a cargo del grupo, y un asistente cuando el segundo grupo lo justifique."
+  >
+    <ul class="grid list-none gap-5 p-0 md:grid-cols-2">
+      {
+        EQUIPO.map((miembro) => (
+          <li class="rounded-marca border border-borde bg-fondo p-6">
+            <p class="font-mono text-micro tracking-[0.14em] text-acento uppercase">
+              {miembro.rol}
+            </p>
+            <h3 class="mt-2 font-display text-titulo-3 text-balance">{miembro.quien}</h3>
+            <p class="mt-2 text-pequeno text-pretty text-texto-suave">{miembro.detalle}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  <Cierre />
+</PlantillaPagina>

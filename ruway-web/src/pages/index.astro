@@ -1,0 +1,69 @@
+---
+/**
+ * HOME
+ * ---------------------------------------------------------------------------
+ * Los 11 bloques del `01-sitemap-final.md` §5, en su orden aprobado:
+ *
+ *   1  Hero ................ eslogan, fecha de inicio y doble CTA
+ *   2  Barra de datos ...... 8 semanas · 24 sesiones · 48 h · 7 a 10 · 14+
+ *   3  Propuesta de valor .. cuatro razones
+ *   4  Para quién .......... tres perfiles, tres proyectos
+ *   5  El camino ........... cuatro escalones
+ *   6  Herramientas ........ ChatGPT, Gemini, Copilot, Make/Zapier, Notion
+ *   7  Resultado ........... los seis puntos del egresado
+ *   8  Precio resumido ..... lanzamiento + precio de lista
+ *   9  Sede ................ dirección y horario
+ *  10  Honestidad .......... certificado sin validez oficial MINEDU
+ *  11  Llamado final ....... demo gratuita, cupo 12
+ *
+ * La página no tiene estado propio: solo compone bloques. Todo el contenido
+ * vive en `src/data/`, así que aquí no hay una sola frase escrita a mano.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+import Hero from '../components/home/Hero.astro';
+import BarraDatos from '../components/home/BarraDatos.astro';
+import PropuestaValor from '../components/home/PropuestaValor.astro';
+import ParaQuien from '../components/home/ParaQuien.astro';
+import Camino from '../components/home/Camino.astro';
+import Herramientas from '../components/home/Herramientas.astro';
+import Resultado from '../components/home/Resultado.astro';
+import PrecioResumen from '../components/home/PrecioResumen.astro';
+import Sede from '../components/home/Sede.astro';
+import Honestidad from '../components/home/Honestidad.astro';
+import CtaFinal from '../components/home/CtaFinal.astro';
+
+import { jsonLdCurso } from '../lib/datos-estructurados';
+
+/* ---------------------------------------------------------------- metadatos */
+const titulo = 'Academia de inteligencia artificial en Cajamarca';
+const descripcion =
+  'Academia presencial de inteligencia artificial en Cajamarca. 8 semanas, 24 sesiones y 48 horas. Grupos de 7 a 10 alumnos. Empieza el 27 de octubre.';
+
+/* ------------------------------------------------------- datos estructurados
+   El nodo `Course` se construye en `src/lib/datos-estructurados.ts` y lo
+   comparten la portada, /programa y /precios. Así no puede existir una versión
+   del curso con el precio viejo. */
+const grafo = {
+  '@context': 'https://schema.org',
+  '@graph': [jsonLdCurso()],
+};
+---
+
+<BaseLayout titulo={titulo} descripcion={descripcion}>
+  <Hero />
+  <BarraDatos />
+  <PropuestaValor />
+  <ParaQuien />
+  <Camino />
+  <Herramientas />
+  <Resultado />
+  <PrecioResumen />
+  <Sede />
+  <Honestidad />
+  <CtaFinal />
+
+  <Fragment slot="datos-estructurados">
+    <script type="application/ld+json" set:html={JSON.stringify(grafo)} />
+  </Fragment>
+</BaseLayout>

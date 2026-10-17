@@ -1,0 +1,32 @@
+---
+/**
+ * HOME · Bloque 3 — Propuesta de valor
+ *
+ * Las cuatro razones para hacerlo aquí y no en un curso online (§2.5 y §2.6),
+ * una por tarjeta, en el orden en que está escrita la fuente.
+ */
+import { PROPUESTA_VALOR } from '../../data/programa';
+import Seccion from '../Seccion.astro';
+import Icono from '../Icono.astro';
+---
+
+<Seccion
+  id="propuesta"
+  eyebrow="Por qué aquí"
+  titulo="Cuatro razones para aprenderlo en persona"
+  entrada="No competimos con los cursos online de Lima. Competimos donde ellos no llegan: presencialidad, cercanía y resultados que se pueden verificar."
+>
+  <ul class="grid list-none gap-5 p-0 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      PROPUESTA_VALOR.map((tarjeta) => (
+        <li class="rounded-marca border border-borde bg-superficie p-6">
+          <span class="grid size-11 place-items-center rounded-md bg-superficie-alta text-acento">
+            <Icono nombre={tarjeta.icono} />
+          </span>
+          <h3 class="mt-4 font-display text-titulo-3 text-balance md:min-h-[2lh]">{tarjeta.titulo}</h3>
+          <p class="mt-2 text-pequeno text-pretty text-texto-suave">{tarjeta.texto}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Seccion>

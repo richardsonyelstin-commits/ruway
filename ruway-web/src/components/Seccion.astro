@@ -1,0 +1,68 @@
+---
+/**
+ * Envoltorio de sección de la Home.
+ *
+ * Garantiza que TODAS las secciones tengan la misma estructura accesible:
+ *  - `<section>` con `aria-labelledby` que apunta a su propio `<h2>`
+ *  - jerarquía de encabezados sin saltos (la página tiene un solo `<h1>`, el del hero)
+ *  - ancho de lectura limitado en la entrada
+ *
+ * Así el orden de encabezados no depende de que cada bloque se acuerde de hacerlo bien.
+ */
+interface Props {
+  /** Identificador de la sección. Se usa también para el ancla (`#id`) */
+  id: string;
+  /** Etiqueta corta en monoespaciada sobre el título */
+  eyebrow?: string;
+  /** Título de la sección. Obligatorio: es el nombre accesible de la sección */
+  titulo: string;
+  /** Párrafo de entrada, opcional */
+  entrada?: string;
+  /** `superficie` da a la banda un fondo elevado y bordes */
+  tono?: 'fondo' | 'superficie';
+  /** Ancho máximo del contenido */
+  ancho?: 'normal' | 'amplio';
+  clase?: string;
+}
+
+const {
+  id,
+  eyebrow,
+  titulo,
+  entrada,
+  tono = 'fondo',
+  ancho = 'normal',
+  clase = '',
+} = Astro.props;
+
+const fondos = tono === 'superficie' ? 'border-y border-borde bg-superficie' : '';
+const anchos = ancho === 'amplio' ? 'max-w-7xl' : 'max-w-6xl';
+---
+
+<section
+  id={id}
+  aria-labelledby={`${id}-titulo`}
+  class={`${fondos} ${clase}`}
+>
+  <div class={`mx-auto ${anchos} px-5 py-14 md:py-20`}>
+    <header class="max-w-2xl">
+      {
+        eyebrow && (
+          <p class="font-mono text-micro tracking-[0.18em] text-acento uppercase">{eyebrow}</p>
+        )
+      }
+      <h2 id={`${id}-titulo`} class="mt-3 font-display text-titulo-2 text-balance">
+        {titulo}
+      </h2>
+      {
+        entrada && (
+          <p class="mt-4 text-cuerpo text-pretty text-texto-suave">{entrada}</p>
+        )
+      }
+    </header>
+
+    <div class="mt-10 md:mt-12">
+      <slot />
+    </div>
+  </div>
+</section>

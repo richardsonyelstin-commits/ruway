@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+.astro/
+
+# Entorno
+.env
+.env.production
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/

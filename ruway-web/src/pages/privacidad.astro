@@ -1,0 +1,44 @@
+---
+/**
+ * /privacidad — Ley 29733, finalidad, derechos ARCO y datos de menores.
+ *
+ * Anclas: las de `src/data/legal.ts` (una por cláusula). El sitemap no fija
+ * anclas para las páginas legales, así que se nombran por cláusula para que se
+ * pueda enlazar una concreta desde fuera.
+ *
+ * ⚠️ ESTA PÁGINA NO SE PUEDE PUBLICAR TODAVÍA: el RUC del responsable sigue
+ * `[POR DEFINIR]`. Se muestra como hueco visible a propósito, para que no se
+ * olvide. Ver `README.md`.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import ContenidoLegal from '../components/ContenidoLegal.astro';
+import Retorno from '../components/Retorno.astro';
+import { conInicio } from '../lib/migajas';
+import { ACTUALIZADO, SECCIONES_PRIVACIDAD } from '../data/legal';
+
+const migajas = conInicio({ etiqueta: 'Privacidad', href: '/privacidad' });
+
+const titulo = 'Política de privacidad';
+const descripcion =
+  'Cómo trata RUWAY ACADEMY los datos personales de alumnos y apoderados según la Ley 29733: finalidad, datos de menores, derechos ARCO y contacto.';
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="Legal"
+  h1="Política de privacidad"
+  entrada="Qué datos recogemos, para qué los usamos y cómo puedes pedir que los devolvamos. Los datos de menores de edad tienen reglas propias y están explicadas aparte, porque son las que más importan aquí."
+  migajas={migajas}
+>
+  <div class="mx-auto max-w-6xl px-5 py-12 md:py-16">
+    <p class="font-mono text-micro tracking-[0.14em] text-texto-suave uppercase">
+      Última actualización: {ACTUALIZADO}
+    </p>
+    <div class="mt-8">
+      <ContenidoLegal secciones={SECCIONES_PRIVACIDAD} />
+    </div>
+  </div>
+
+  <Retorno />
+</PlantillaPagina>

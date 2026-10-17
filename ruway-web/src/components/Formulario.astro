@@ -1,0 +1,602 @@
+---
+/**
+ * Formulario — el único formulario del sitio (ADR-004).
+ *
+ * NO HAY BACKEND (ADR-008). Al confirmar, el navegador arma un texto con los
+ * datos y abre WhatsApp con ese texto ya escrito. Ningún dato sale de este
+ * dispositivo hacia un servidor nuestro, y no se guarda nada.
+ *
+ * TRES DECISIONES QUE CONVIENE ENTENDER
+ *
+ * 1. HAY UN PASO DE REVISIÓN (ADR-022).
+ *    El envío no es inmediato: primero se muestra el mensaje exacto que se va a
+ *    abrir, y hay que confirmarlo. Es lo que pide WCAG 2.2 · 3.3.4 (prevención
+ *    de errores) y, en la práctica, evita el caso real de un número mal escrito
+ *    que nadie puede corregir después.
+ *
+ * 2. ES UN PROCESO DE MEJORA PROGRESIVA, Y SE DICE EN VOZ ALTA.
+ *    Sin JavaScript el formulario no puede hacer su trabajo —no hay servidor
+ *    que reciba nada—, así que se explica con un `<noscript>` y se ofrece el
+ *    canal que sí funciona: escribir por WhatsApp. Nada de un formulario que
+ *    parece funcionar y no hace nada.
+ *
+ * 3. LA VALIDACIÓN ES PROPIA, NO LA DEL NAVEGADOR.
+ *    `novalidate` desactiva los globos nativos, que desaparecen solos y no
+ *    dicen junto a qué campo está el problema. En su lugar hay un resumen con
+ *    `role="alert"` y un mensaje de texto junto a cada campo (3.3.1 y 3.3.3).
+ *
+ * DÓNDE SE COLOCA
+ *   Está pensado para vivir dentro de una banda `tono="superficie"`. Sigue el
+ *   patrón de elevación del sitio: la banda es la más clara, la tarjeta del
+ *   formulario se hunde a `fondo` y los campos se vuelven a elevar. Por eso la
+ *   tarjeta es `bg-fondo` y no `bg-superficie`: sobre una banda clara, una
+ *   tarjeta del mismo color no se vería.
+ */
+import Icono from './Icono.astro';
+import { SITIO } from '../data/site';
+import { PARA_QUIEN } from '../data/programa';
+import { INTENCIONES } from '../lib/mensaje';
+import { ENLACE_CONSULTA } from '../lib/whatsapp';
+
+interface Props {
+  /** Prefijo de todos los `id`. Evita colisiones si una página lleva dos formularios. */
+  prefijo: string;
+  /** Encabezado del bloque. Obligatorio: sin él, los `h4` internos saltarían un nivel. */
+  titulo: string;
+}
+
+const { prefijo, titulo } = Astro.props;
+
+const ref = (sufijo: string) => `${prefijo}-${sufijo}`;
+
+/**
+ * Los perfiles salen de `PARA_QUIEN`, la misma lista que usan la Home y
+ * /programa. Si se escribieran aquí a mano, con el tiempo dirían otra cosa.
+ */
+const PERFILES = PARA_QUIEN.map((p) => `${p.perfil} · ${p.rango}`);
+
+/** Estilos compartidos por todos los campos de texto. */
+const CONTROL =
+  'w-full rounded-sm border border-borde-control bg-superficie px-4 py-3 text-cuerpo text-texto placeholder:text-texto-suave';
+
+const BOTON_PRIMARIO =
+  'inline-flex min-h-11 items-center justify-center gap-2.5 rounded-full bg-maiz px-6 py-3 font-semibold text-sobre-cta no-underline transition-colors duration-150 hover:bg-maiz/90';
+
+const BOTON_SECUNDARIO =
+  'inline-flex min-h-11 items-center justify-center rounded-full border-2 border-borde-control px-6 py-3 font-semibold text-texto no-underline transition-colors duration-150 hover:border-acento hover:text-acento';
+
+const ERROR = 'mt-2 text-pequeno text-alerta';
+
+/** Une ids para `aria-describedby`, omitiendo los vacíos. */
+const descrito = (...ids: string[]) => ids.filter(Boolean).join(' ');
+---
+
+<div class="rounded-marca border border-borde bg-fondo p-6 md:p-8" data-formulario data-prefijo={prefijo}>
+  <h3 class="font-display text-titulo-3">{titulo}</h3>
+
+  {
+    /*
+     * Sin JavaScript no hay forma de armar el mensaje: no existe un servidor que
+     * lo reciba. Se dice tal cual y se ofrece el canal que funciona siempre.
+     */
+  }
+  <noscript>
+    <div class="mt-4 rounded-sm border border-alerta bg-superficie p-4">
+      <p class="text-pequeno text-texto">
+        Este formulario arma el mensaje de WhatsApp en tu propio dispositivo, y no en un servidor
+        nuestro. Por eso necesita JavaScript activo. Escríbenos directamente y te atendemos igual:
+      </p>
+      <p class="mt-3">
+        <a
+          href={ENLACE_CONSULTA}
+          rel="noopener noreferrer"
+          target="_blank"
+          class={BOTON_PRIMARIO}
+        >
+          <Icono nombre="mensaje" clase="size-5" grosor={1.8} />
+          Escribir por WhatsApp
+        </a>
+      </p>
+    </div>
+  </noscript>
+
+  <p class="mt-3 text-pequeno text-texto-suave">
+    Los campos con <span class="text-alerta" aria-hidden="true">*</span> son obligatorios. Antes de que
+    se abra WhatsApp vas a ver el mensaje completo y podrás corregirlo.
+  </p>
+
+  {
+    /*
+     * RESUMEN DE ERRORES (WCAG 2.2 · 3.3.1 y 3.3.3).
+     * `role="alert"` lo anuncia en cuanto aparece con contenido; al recibir foco
+     * queda a un Tab de cada campo con problema, enlazado por su ancla.
+     */
+  }
+  <div
+    id={ref('errores')}
+    role="alert"
+    tabindex="-1"
+    hidden
+    class="mt-5 rounded-sm border border-alerta bg-superficie p-4"
+  >
+    <h4 class="font-display text-cuerpo">Revisa estos campos antes de continuar</h4>
+    <ul class="mt-2 list-disc space-y-1 pl-5 text-pequeno text-texto"></ul>
+  </div>
+
+  <form class="mt-6" method="post" novalidate>
+    <!-- ───────────────────── Campos ───────────────────── -->
+    <div id={ref('campos')}>
+      <fieldset
+        id={ref('intencion')}
+        data-campo="intencion"
+        data-nombre="Qué quieres hacer"
+        aria-describedby={ref('intencion-error')}
+        class="m-0 border-0 p-0"
+      >
+        <legend class="text-cuerpo font-semibold text-texto">
+          ¿Qué quieres hacer? <span class="text-alerta" aria-hidden="true">*</span>
+        </legend>
+        <div class="mt-3 grid gap-3 sm:grid-cols-2">
+          {
+            INTENCIONES.map((opcion) => (
+              <label class="opcion" for={ref(`intencion-${opcion.valor}`)}>
+                <input
+                  id={ref(`intencion-${opcion.valor}`)}
+                  type="radio"
+                  name={ref('intencion')}
+                  value={opcion.valor}
+                  required
+                  class="mt-0.5 size-5 shrink-0"
+                  aria-describedby={ref('intencion-error')}
+                />
+                <span>
+                  <span class="block font-semibold text-texto">{opcion.etiqueta}</span>
+                  <span class="mt-0.5 block text-pequeno text-texto-suave">{opcion.ayuda}</span>
+                </span>
+              </label>
+            ))
+          }
+        </div>
+        <p id={ref('intencion-error')} class={ERROR} data-error-de="intencion" hidden></p>
+      </fieldset>
+
+      <div class="mt-6 grid gap-5 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          <label class="block font-semibold text-texto" for={ref('nombre')}>
+            Nombre y apellidos <span class="text-alerta" aria-hidden="true">*</span>
+          </label>
+          <p id={ref('nombre-ayuda')} class="mt-1 text-pequeno text-texto-suave">
+            Si escribes por un menor de edad, pon tu nombre y dinos el vínculo en el mensaje.
+          </p>
+          <input
+            id={ref('nombre')}
+            name={ref('nombre')}
+            type="text"
+            required
+            autocomplete="name"
+            maxlength="80"
+            data-campo="nombre"
+            data-nombre="Nombre y apellidos"
+            aria-describedby={descrito(ref('nombre-ayuda'), ref('nombre-error'))}
+            class={`mt-2 ${CONTROL}`}
+          />
+          <p id={ref('nombre-error')} class={ERROR} data-error-de="nombre" hidden></p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-texto" for={ref('whatsapp')}>
+            WhatsApp <span class="text-alerta" aria-hidden="true">*</span>
+          </label>
+          <p id={ref('whatsapp-ayuda')} class="mt-1 text-pequeno text-texto-suave">
+            Nueve dígitos. Ejemplo: {SITIO.contacto.whatsapp.local}.
+          </p>
+          <input
+            id={ref('whatsapp')}
+            name={ref('whatsapp')}
+            type="tel"
+            required
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength="20"
+            placeholder={SITIO.contacto.whatsapp.local}
+            data-campo="whatsapp"
+            data-nombre="WhatsApp"
+            aria-describedby={descrito(ref('whatsapp-ayuda'), ref('whatsapp-error'))}
+            class={`mt-2 ${CONTROL}`}
+          />
+          <p id={ref('whatsapp-error')} class={ERROR} data-error-de="whatsapp" hidden></p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-texto" for={ref('correo')}>
+            Correo <span class="text-pequeno font-normal text-texto-suave">(opcional)</span>
+          </label>
+          <p id={ref('correo-ayuda')} class="mt-1 text-pequeno text-texto-suave">
+            Solo si prefieres que quede por escrito.
+          </p>
+          <input
+            id={ref('correo')}
+            name={ref('correo')}
+            type="email"
+            autocomplete="email"
+            maxlength="120"
+            data-campo="correo"
+            data-nombre="Correo"
+            aria-describedby={descrito(ref('correo-ayuda'), ref('correo-error'))}
+            class={`mt-2 ${CONTROL}`}
+          />
+          <p id={ref('correo-error')} class={ERROR} data-error-de="correo" hidden></p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block font-semibold text-texto" for={ref('perfil')}>
+            Perfil del alumno <span class="text-alerta" aria-hidden="true">*</span>
+          </label>
+          <p id={ref('perfil-ayuda')} class="mt-1 text-pequeno text-texto-suave">
+            Los tres perfiles trabajan en el mismo grupo, con proyectos distintos.
+          </p>
+          <select
+            id={ref('perfil')}
+            name={ref('perfil')}
+            required
+            data-campo="perfil"
+            data-nombre="Perfil del alumno"
+            aria-describedby={descrito(ref('perfil-ayuda'), ref('perfil-error'))}
+            class={`mt-2 ${CONTROL}`}
+          >
+            <option value="">Elige una opción</option>
+            {PERFILES.map((perfil) => <option value={perfil}>{perfil}</option>)}
+          </select>
+          <p id={ref('perfil-error')} class={ERROR} data-error-de="perfil" hidden></p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="block font-semibold text-texto" for={ref('mensaje')}>
+            ¿Algo que debamos saber? <span class="text-pequeno font-normal text-texto-suave">(opcional)</span>
+          </label>
+          <p id={ref('mensaje-ayuda')} class="mt-1 text-pequeno text-texto-suave">
+            Tu horario, si el alumno es menor y quién lo acompaña, o la duda que tengas.
+          </p>
+          <textarea
+            id={ref('mensaje')}
+            name={ref('mensaje')}
+            rows="3"
+            maxlength="500"
+            data-campo="mensaje"
+            data-nombre="Mensaje"
+            aria-describedby={descrito(ref('mensaje-ayuda'), ref('mensaje-error'))}
+            class={`mt-2 resize-y ${CONTROL}`}
+          ></textarea>
+          <p id={ref('mensaje-error')} class={ERROR} data-error-de="mensaje" hidden></p>
+        </div>
+      </div>
+
+      <!-- ───────────────────── Autorización ───────────────────── -->
+      <div class="mt-6">
+        <label class="opcion" for={ref('consent')}>
+          <input
+            id={ref('consent')}
+            name={ref('consent')}
+            type="checkbox"
+            required
+            data-campo="consent"
+            data-nombre="Autorización"
+            aria-describedby={ref('consent-error')}
+            class="mt-0.5 size-5 shrink-0"
+          />
+          <span class="text-pequeno text-texto">
+            Autorizo a RUWAY ACADEMY a usar estos datos para responderme y, si avanzo, para gestionar
+            la matrícula. <span class="text-alerta" aria-hidden="true">*</span>
+          </span>
+        </label>
+        <p class="mt-2 text-pequeno text-texto-suave">
+          Este sitio no guarda nada: los datos viajan en tu propio mensaje de WhatsApp.{' '}
+          <a href="/privacidad">Cómo tratamos tus datos</a>.
+        </p>
+        <p id={ref('consent-error')} class={ERROR} data-error-de="consent" hidden></p>
+      </div>
+
+      <p class="mt-6">
+        <button id={ref('revisar')} type="submit" class={BOTON_PRIMARIO}>
+          Revisar el mensaje
+          <span class="text-sobre-cta"><Icono nombre="flecha" clase="size-5" grosor={2.2} /></span>
+        </button>
+      </p>
+    </div>
+
+    <!-- ───────────────────── Revisión (ADR-022) ───────────────────── -->
+    <div id={ref('revision')} tabindex="-1" hidden class="rounded-sm border border-borde-control bg-superficie p-5">
+      <h4 class="font-display text-cuerpo">Así va a quedar tu mensaje</h4>
+      <p id={ref('vista-previa')} class="mt-3 whitespace-pre-wrap text-pequeno text-texto"></p>
+
+      <p class="mt-4 border-t border-borde pt-4 text-pequeno text-texto-suave">
+        Revisa sobre todo el número: es por donde te vamos a responder. Si algo está mal, vuelve a
+        editar. Nada se ha enviado todavía.
+      </p>
+
+      <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+        <a
+          id={ref('abrir')}
+          href={ENLACE_CONSULTA}
+          rel="noopener noreferrer"
+          target="_blank"
+          class={BOTON_PRIMARIO}
+        >
+          <Icono nombre="mensaje" clase="size-5" grosor={1.8} />
+          Abrir WhatsApp y enviar
+        </a>
+        <button type="button" data-accion="editar" class={BOTON_SECUNDARIO}>Volver a editar</button>
+      </div>
+    </div>
+
+    {
+      /*
+       * MENSAJES DE ESTADO (WCAG 2.2 · 4.1.3). Visualmente oculto: su único
+       * destinatario es el lector de pantalla, que necesita saber que el paso
+       * cambió y que no se ha enviado nada todavía.
+       */
+    }
+    <p id={ref('estado')} role="status" class="visualmente-oculto"></p>
+  </form>
+</div>
+
+<style>
+  /* Opción seleccionable (radio y casilla): toda la tarjeta es el objetivo
+     táctil, no solo el círculo. Cumple 2.5.8 con margen. */
+  .opcion {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--ruway-borde-control);
+    border-radius: var(--radius-sm);
+    background-color: var(--ruway-superficie);
+    cursor: pointer;
+  }
+
+  .opcion:hover {
+    border-color: var(--ruway-acento);
+  }
+
+  /* El foco se pinta en la tarjeta, no en el círculo de 20 px: un anillo de 3 px
+     sobre el radio es difícil de ver (WCAG 2.2 · 2.4.11). */
+  @supports selector(:has(*)) {
+    .opcion input:focus-visible {
+      outline: none;
+    }
+
+    .opcion:has(input:focus-visible) {
+      outline: 3px solid var(--ruway-foco);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Campo con error: además del texto, el borde cambia de color. Nunca solo
+     color (1.4.1): el mensaje de texto es obligatorio y siempre está. */
+  [aria-invalid='true'] {
+    border-color: var(--ruway-alerta);
+  }
+
+  fieldset[aria-invalid='true'] .opcion {
+    border-color: var(--ruway-alerta);
+  }
+</style>
+
+<script>
+  import { componerMensaje, intencionDe, normalizarTelefono, type DatosFormulario } from '../lib/mensaje';
+  import { enlaceWhatsApp } from '../lib/whatsapp';
+
+  /** Espera antes de pasar a /gracias, para no cancelar la pestaña de WhatsApp. */
+  const ESPERA_ANTES_DE_GRACIAS = 250;
+
+  interface Problema {
+    clave: string;
+    mensaje: string;
+  }
+
+  function iniciar(raiz: HTMLElement) {
+    if (raiz.dataset.listo === 'true') return;
+    raiz.dataset.listo = 'true';
+
+    const prefijo = raiz.dataset.prefijo ?? '';
+    const porId = <T extends HTMLElement = HTMLElement>(sufijo: string) =>
+      raiz.querySelector<T>(`#${prefijo}-${sufijo}`);
+
+    const formulario = raiz.querySelector('form');
+    const campos = porId('campos');
+    const revision = porId('revision');
+    const resumen = porId('errores');
+    const lista = resumen?.querySelector('ul');
+    const vistaPrevia = porId('vista-previa');
+    const abrir = raiz.querySelector<HTMLAnchorElement>(`#${prefijo}-abrir`);
+    const estado = porId('estado');
+
+    if (!formulario || !campos || !revision || !resumen || !lista || !vistaPrevia || !abrir) return;
+
+    const controles = [...raiz.querySelectorAll<HTMLElement>('[data-campo]')];
+    const errorDe = (clave: string) => raiz.querySelector<HTMLElement>(`[data-error-de="${clave}"]`);
+
+    /* ---------------------------------------------------------------- lectura */
+
+    interface Lectura extends Omit<DatosFormulario, 'intencion'> {
+      intencion: string;
+      consentimiento: boolean;
+    }
+
+    function leer(): Lectura {
+      const radio = formulario!.querySelector<HTMLInputElement>(
+        `input[name="${prefijo}-intencion"]:checked`,
+      );
+      return {
+        intencion: radio?.value ?? '',
+        nombre: porId<HTMLInputElement>('nombre')?.value ?? '',
+        whatsapp: porId<HTMLInputElement>('whatsapp')?.value ?? '',
+        correo: porId<HTMLInputElement>('correo')?.value ?? '',
+        perfil: porId<HTMLSelectElement>('perfil')?.value ?? '',
+        mensaje: porId<HTMLTextAreaElement>('mensaje')?.value ?? '',
+        consentimiento: porId<HTMLInputElement>('consent')?.checked ?? false,
+      };
+    }
+
+    /* -------------------------------------------------------------- validación */
+
+    function validar(datos: Lectura): Problema[] {
+      const problemas: Problema[] = [];
+
+      if (!datos.intencion) {
+        problemas.push({
+          clave: 'intencion',
+          mensaje: 'Elige si quieres la clase demo o matricularte.',
+        });
+      }
+
+      if (datos.nombre.trim().length < 3) {
+        problemas.push({
+          clave: 'nombre',
+          mensaje: 'Escribe tu nombre completo, con al menos 3 letras.',
+        });
+      }
+
+      if (normalizarTelefono(datos.whatsapp).length !== 9) {
+        problemas.push({
+          clave: 'whatsapp',
+          mensaje: 'Escribe tu número de 9 dígitos, por ejemplo 930 736 214.',
+        });
+      }
+
+      const correo = datos.correo.trim();
+      if (correo && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) {
+        problemas.push({
+          clave: 'correo',
+          mensaje: 'Revisa el correo: falta la arroba o el dominio. Ejemplo: nombre@correo.com',
+        });
+      }
+
+      if (!datos.perfil) {
+        problemas.push({ clave: 'perfil', mensaje: 'Elige el perfil del alumno.' });
+      }
+
+      if (!datos.consentimiento) {
+        problemas.push({
+          clave: 'consent',
+          mensaje: 'Necesitamos tu autorización para responderte con estos datos.',
+        });
+      }
+
+      return problemas;
+    }
+
+    /* ---------------------------------------------------------------- pintado */
+
+    function limpiar() {
+      for (const control of controles) control.removeAttribute('aria-invalid');
+      for (const error of raiz.querySelectorAll<HTMLElement>('[data-error-de]')) {
+        error.hidden = true;
+        error.textContent = '';
+      }
+      lista!.replaceChildren();
+      resumen!.hidden = true;
+    }
+
+    function pintarProblemas(problemas: Problema[]) {
+      for (const { clave, mensaje } of problemas) {
+        const error = errorDe(clave);
+        if (error) {
+          error.textContent = mensaje;
+          error.hidden = false;
+        }
+
+        const control = raiz.querySelector<HTMLElement>(`[data-campo="${clave}"]`);
+        control?.setAttribute('aria-invalid', 'true');
+
+        const elemento = document.createElement('li');
+        const enlace = document.createElement('a');
+        enlace.href = `#${control?.id ?? ''}`;
+        enlace.textContent = `${control?.dataset.nombre ?? 'Campo'}: ${mensaje}`;
+        elemento.append(enlace);
+        lista!.append(elemento);
+      }
+
+      resumen!.hidden = false;
+      resumen!.focus();
+      if (estado) estado.textContent = `${problemas.length} campo(s) por revisar.`;
+    }
+
+    /* ---------------------------------------------------------------- acciones */
+
+    function revisar() {
+      limpiar();
+      const datos = leer();
+      const problemas = validar(datos);
+
+      if (problemas.length) {
+        pintarProblemas(problemas);
+        return;
+      }
+
+      const completo: DatosFormulario = {
+        intencion: datos.intencion as DatosFormulario['intencion'],
+        nombre: datos.nombre,
+        whatsapp: datos.whatsapp,
+        correo: datos.correo.trim() || undefined,
+        perfil: datos.perfil,
+        mensaje: datos.mensaje.trim() || undefined,
+      };
+
+      const mensaje = componerMensaje(completo);
+      vistaPrevia!.textContent = mensaje;
+      abrir!.href = enlaceWhatsApp(mensaje);
+
+      campos!.hidden = true;
+      revision!.hidden = false;
+      revision!.focus();
+
+      if (estado) {
+        estado.textContent =
+          'Mensaje listo para revisar. Todavía no se ha enviado ni se ha abierto WhatsApp.';
+      }
+    }
+
+    function volverAEditar() {
+      revision!.hidden = true;
+      campos!.hidden = false;
+      raiz.querySelector<HTMLButtonElement>('button[type="submit"]')?.focus();
+      if (estado) estado.textContent = 'Puedes corregir los datos y volver a revisar.';
+    }
+
+    /* Intención preseleccionada desde la URL (?intencion=demo|matricula).
+       Se hace aquí y no en el HTML porque el sitio es estático: el parámetro
+       solo existe en el navegador, nunca durante la compilación. */
+    const intencionUrl = intencionDe(new URLSearchParams(window.location.search).get('intencion'));
+    if (intencionUrl) {
+      const radio = formulario.querySelector<HTMLInputElement>(
+        `input[name="${prefijo}-intencion"][value="${intencionUrl}"]`,
+      );
+      if (radio) radio.checked = true;
+    }
+
+    /* Enter en cualquier campo revisa el formulario: el botón es un submit real
+       y el envío se intercepta. Nunca sale una petición a un servidor. */
+    formulario.addEventListener('submit', (evento) => {
+      evento.preventDefault();
+      revisar();
+    });
+
+    formulario.addEventListener('click', (evento) => {
+      const boton = (evento.target as HTMLElement).closest<HTMLElement>('[data-accion]');
+      if (boton?.dataset.accion === 'editar') volverAEditar();
+    });
+
+    /* Confirmación. El enlace abre WhatsApp en otra pestaña —es un enlace real,
+       así que ningún bloqueador de ventanas lo cancela— y DESPUÉS esta pestaña
+       pasa a /gracias, que confirma el envío y explica qué sigue. El retardo
+       existe para que el navegador haya abierto ya la otra pestaña: navegar en
+       el mismo instante puede cancelarla. */
+    abrir.addEventListener('click', () => {
+      if (estado) estado.textContent = 'Abriendo WhatsApp.';
+      window.setTimeout(() => window.location.assign('/gracias'), ESPERA_ANTES_DE_GRACIAS);
+    });
+  }
+
+  for (const raiz of document.querySelectorAll<HTMLElement>('[data-formulario]')) iniciar(raiz);
+</script>

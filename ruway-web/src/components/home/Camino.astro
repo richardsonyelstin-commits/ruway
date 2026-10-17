@@ -1,0 +1,113 @@
+---
+/**
+ * HOME · Bloque 5 — El camino
+ *
+ * Es el bloque que explica el eslogan. Cuatro escalones que suben: 25 %, 50 %,
+ * 75 % y 100 % del recorrido.
+ *
+ * POR QUÉ ASÍ
+ *   El símbolo de RUWAY es una escalera. La marca dice «camino» y dice «paso a
+ *   paso». Este bloque no ilustra la idea con un gráfico genérico: usa la misma
+ *   geometría que el símbolo para mostrar el avance real del programa.
+ *
+ * DOS LECTURAS DEL MISMO ELEMENTO
+ *   · En escritorio los cuatro escalones se ven a la vez y se comparan entre
+ *     sí: la ALTURA dibuja la escalera.
+ *   · En móvil los escalones van apilados y no hay nada con que compararlos,
+ *     así que la altura no diría nada. Ahí el mismo bloque pasa a ser una barra
+ *     de avance: el ANCHO dibuja el 25, 50, 75 y 100 % del recorrido.
+ *
+ * MOVIMIENTO
+ *   Los escalones crecen al entrar en pantalla (animación por desplazamiento).
+ *   Donde el navegador no la soporta, los escalones ya están dibujados: la
+ *   animación es una mejora, nunca el estado por defecto. Con «reducir
+ *   movimiento» tampoco se anima.
+ */
+import { CAMINO } from '../../data/programa';
+import Seccion from '../Seccion.astro';
+---
+
+<Seccion
+  id="camino"
+  eyebrow="El camino"
+  titulo="Ocho semanas, cuatro escalones"
+  entrada="El programa está construido para que cada semana te apoyes en lo anterior. Al final no rindes un examen: presentas algo que funciona."
+>
+  <ol class="grid list-none items-end gap-4 p-0 lg:grid-cols-4">
+    {
+      CAMINO.map((paso) => (
+        <li class="flex flex-col">
+          <div class="rounded-marca border border-borde bg-superficie p-5">
+            <div class="flex items-baseline justify-between gap-3">
+              <p class="dato text-titulo-3 font-semibold text-acento">{paso.numero}</p>
+              <p class="font-mono text-micro text-texto-suave">{paso.semanas}</p>
+            </div>
+            <h3 class="mt-2 font-display text-titulo-3 text-balance">{paso.titulo}</h3>
+            <p class="mt-2 text-pequeno text-pretty text-texto-suave">{paso.detalle}</p>
+          </div>
+
+          {/* El escalón. Decorativo: el dato real es el número de semana, que ya
+              está arriba en texto, así que se oculta a lectores de pantalla. */}
+          <div class="bar mt-3 rounded-b-md bg-maiz" style={`--avance:${paso.avance}`} aria-hidden="true">
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Seccion>
+
+<style>
+  /* Escritorio: la escalera. `--avance` vale 25, 50, 75 y 100. */
+  .bar {
+    width: 100%;
+    height: calc(var(--avance) * 1.6px);
+    min-height: 0.75rem;
+    transform-origin: center bottom;
+  }
+
+  @media (max-width: 63.99rem) {
+    .bar {
+      width: calc(var(--avance) * 1%);
+      height: 0.5rem;
+      min-height: 0;
+      transform-origin: left center;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .bar {
+        animation: crecer-x linear both;
+        animation-timeline: view();
+        animation-range: entry 15% cover 40%;
+      }
+    }
+  }
+
+  /* En escritorio el escalón crece hacia arriba, no hacia la derecha. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+      .bar {
+        animation-name: crecer-y;
+      }
+    }
+  }
+
+  @keyframes crecer-x {
+    from {
+      transform: scaleX(0.08);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes crecer-y {
+    from {
+      transform: scaleY(0.05);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+/**
+ * ContenidoLegal — pinta una página legal completa: su índice y sus secciones.
+ *
+ * Las tres páginas legales (privacidad, términos y cookies) tienen la misma
+ * forma: una lista de secciones con título, párrafos, listas y tablas de dos
+ * columnas. En vez de repetir el marcado tres veces, se declara una sola vez
+ * aquí y el contenido vive en `src/data/legal.ts`.
+ *
+ * Ventaja concreta: el día que haya que cambiar la tipografía o el espaciado
+ * de las cláusulas, se cambia en un sitio y no en tres que ya divergieron.
+ *
+ * POR QUÉ LLEVA ÍNDICE
+ *   Un texto legal largo sin índice es un texto legal que nadie lee. El índice
+ *   se queda fijo mientras se lee en escritorio, y en móvil es una lista corta
+ *   al principio. Cada apartado tiene ancla propia, así que se puede enlazar
+ *   una cláusula concreta desde fuera.
+ *
+ * El marcador `[POR DEFINIR]` que aparezca dentro de un texto se sustituye por
+ * el componente `Pendiente`, de modo que el hueco se vea como hueco.
+ */
+import Pendiente from './Pendiente.astro';
+import type { SeccionLegal } from '../data/legal';
+
+interface Props {
+  secciones: SeccionLegal[];
+}
+
+const { secciones } = Astro.props;
+
+/** Parte un texto por el marcador de dato pendiente. */
+const trozos = (texto: string) => texto.split('[POR DEFINIR]');
+---
+
+<div class="grid gap-10 lg:grid-cols-[17rem_1fr] lg:gap-16">
+  <nav
+    aria-label="Contenido de esta página"
+    class="lg:sticky lg:top-[calc(var(--altura-header)+1.5rem)] lg:self-start"
+  >
+    <p class="font-mono text-micro tracking-[0.16em] text-texto-suave uppercase">En esta página</p>
+    <ol class="mt-4 list-none space-y-2 p-0 text-pequeno">
+      {
+        secciones.map((seccion, indice) => (
+          <li class="flex gap-3">
+            <span class="dato shrink-0 text-texto-suave" aria-hidden="true">
+              {String(indice + 1).padStart(2, '0')}
+            </span>
+            <a href={`#${seccion.id}`} class="text-texto-suave no-underline hover:text-texto">
+              {seccion.titulo}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
+  <div>
+  {
+    secciones.map((seccion) => (
+      <section
+        id={seccion.id}
+        aria-labelledby={`${seccion.id}-titulo`}
+        class="border-t border-borde py-8 first:border-t-0 first:pt-0"
+      >
+        <h2 id={`${seccion.id}-titulo`} class="font-display text-titulo-3 text-balance">
+          {seccion.titulo}
+        </h2>
+
+        {seccion.parrafos?.map((parrafo) => (
+          <p class="mt-3 max-w-3xl text-cuerpo text-pretty text-texto-suave">
+            {trozos(parrafo).map((trozo, indice) => (
+              <>{indice > 0 && <Pendiente />}{trozo}</>
+            ))}
+          </p>
+        ))}
+
+        {seccion.items && (
+          <ul class="mt-4 max-w-3xl list-none space-y-2.5 p-0 text-cuerpo text-texto-suave">
+            {seccion.items.map((item) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-2 size-1.5 shrink-0 rounded-full bg-acento" aria-hidden="true" />
+                <span class="text-pretty">
+                  {trozos(item).map((trozo, indice) => (
+                    <>{indice > 0 && <Pendiente />}{trozo}</>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {seccion.filas && (
+          <dl class="mt-4 max-w-3xl list-none overflow-hidden rounded-marca border border-borde p-0">
+            {seccion.filas.map((fila) => (
+              <div class="grid gap-1 border-b border-borde bg-superficie px-5 py-3 last:border-b-0 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-6">
+                <dt class="text-pequeno font-medium text-texto">{fila.etiqueta}</dt>
+                <dd class="dato text-pequeno text-pretty text-texto-suave">
+                  {trozos(fila.valor).map((trozo, indice) => (
+                    <>{indice > 0 && <Pendiente />}{trozo}</>
+                  ))}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )}
+
+        {seccion.nota && (
+          <p
+            class:list={[
+              'mt-4 max-w-3xl rounded-marca border-l-4 bg-superficie px-5 py-4 text-pequeno text-pretty text-texto',
+              seccion.aviso ? 'border-alerta' : 'border-maiz',
+            ]}
+          >
+            {trozos(seccion.nota).map((trozo, indice) => (
+              <>{indice > 0 && <Pendiente />}{trozo}</>
+            ))}
+          </p>
+        )}
+      </section>
+    ))
+  }
+  </div>
+</div>

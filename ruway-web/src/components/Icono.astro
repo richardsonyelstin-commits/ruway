@@ -1,0 +1,37 @@
+---
+/**
+ * Icono de línea.
+ *
+ * Por qué inline y no una librería: son 13 iconos. Una librería añadiría
+ * decenas de kilobytes para usar trece. Además, así heredan `currentColor`
+ * y funcionan en ambos temas sin configuración alguna.
+ *
+ * Accesibilidad: el icono es siempre `aria-hidden`. Nunca es el único
+ * portador de un mensaje; siempre lo acompaña un texto (WCAG 2.2 · 1.1.1).
+ * El color se hereda del texto que lo contiene, así que el contraste ya
+ * está garantizado por el contraste de ese texto.
+ */
+import { TRAZOS, type NombreIcono } from '../lib/iconos';
+
+interface Props {
+  nombre: NombreIcono;
+  clase?: string;
+  /** Grosor del trazo. 1.6 por defecto; 2 en tamaños pequeños. */
+  grosor?: number;
+}
+
+const { nombre, clase = 'size-6', grosor = 1.6 } = Astro.props;
+---
+
+<svg
+  class={clase}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width={grosor}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={TRAZOS[nombre]}
+/>

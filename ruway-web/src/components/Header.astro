@@ -1,0 +1,247 @@
+---
+/**
+ * Header — navegación principal.
+ *
+ * Accesibilidad:
+ *  - landmark <header role="banner"> implícito
+ *  - <nav aria-label="Navegación principal">
+ *  - página actual marcada con aria-current="page" (y subrayado, no solo color)
+ *  - menú móvil con aria-expanded / aria-controls, cierre con Escape y
+ *    devolución del foco al botón (WCAG 2.1.2 · 2.4.3)
+ *  - el alternador de tema es un interruptor real (aria-pressed)
+ *  - el panel inferior media (64rem) es el mismo DOM que el menú de escritorio:
+ *    una sola fuente de enlaces, sin duplicar marcado
+ */
+import { NAV_PRINCIPAL, CTA_PRINCIPAL } from '../data/navegacion';
+import { SITIO } from '../data/site';
+import { ENLACE_DEMO } from '../lib/whatsapp';
+import { normalizarRuta } from '../lib/rutas';
+import Marca from './Marca.astro';
+import BotonCTA from './BotonCTA.astro';
+
+const rutaActual = normalizarRuta(Astro.url.pathname);
+
+/** ¿El enlace corresponde a la página en la que estamos? */
+const esActual = (href: string): boolean => normalizarRuta(href) === rutaActual;
+---
+
+<header class="sticky top-0 z-50 border-b border-borde bg-fondo/90 backdrop-blur">
+  <div class="relative mx-auto flex max-w-6xl items-center gap-3 px-5 py-4">
+    <a href="/" class="shrink-0 rounded-sm">
+      <Marca alto={40} alt={`${SITIO.nombre} — ir al inicio`} />
+    </a>
+
+    <!-- Panel: menú desplegable en móvil · fila de navegación en escritorio -->
+    <div id="menu-principal" class="panel" data-abierto="false">
+      <nav aria-label="Navegación principal">
+        <ul class="m-0 flex list-none flex-col gap-1 p-0 lg:flex-row lg:items-center">
+          {
+            NAV_PRINCIPAL.map((enlace) => (
+              <li>
+                <a
+                  href={enlace.href}
+                  aria-current={esActual(enlace.href) ? 'page' : undefined}
+                  class="block rounded-sm px-3 py-2 text-pequeno font-medium text-texto no-underline transition-colors duration-150 hover:bg-superficie-alta"
+                >
+                  {enlace.etiqueta}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2 border-t border-borde pt-3 lg:border-0 lg:pt-0">
+        <button
+          type="button"
+          id="alternar-tema"
+          aria-pressed="false"
+          class="inline-flex size-11 items-center justify-center rounded-full border border-borde-control text-texto transition-colors duration-150 hover:bg-superficie-alta"
+        >
+          <span class="visualmente-oculto">Tema oscuro</span>
+          <!-- Luna: se muestra en tema claro -->
+          <svg
+            class="solo-claro"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <!-- Sol: se muestra en tema oscuro -->
+          <svg
+            class="solo-oscuro"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4"></circle>
+            <path
+              d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+            ></path>
+          </svg>
+        </button>
+
+        <BotonCTA href={ENLACE_DEMO} externo clase="flex-1 lg:flex-none">
+          {CTA_PRINCIPAL.etiqueta}
+        </BotonCTA>
+      </div>
+    </div>
+
+    <!-- Botón del menú móvil -->
+    <button
+      type="button"
+      id="boton-menu"
+      class="burger inline-flex size-11 items-center justify-center rounded-full border border-borde-control text-texto"
+      aria-expanded="false"
+      aria-controls="menu-principal"
+      aria-label="Abrir menú de navegación"
+    >
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M4 7h16M4 12h16M4 17h16"></path>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<style>
+  /* ---------------------------------------------------------------------
+     Panel de navegación
+     Móvil  : panel desplegable bajo el header
+     Escritorio (≥64rem): fila en línea dentro del propio header
+     --------------------------------------------------------------------- */
+  .panel {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem 1.5rem;
+    background-color: var(--color-fondo);
+    border-bottom: 1px solid var(--ruway-borde);
+  }
+
+  .panel[data-abierto='true'] {
+    display: flex;
+  }
+
+  .burger {
+    margin-inline-start: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .panel {
+      position: static;
+      inset-inline: auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-inline-start: auto;
+      padding: 0;
+      background-color: transparent;
+      border-bottom: 0;
+    }
+
+    .burger {
+      display: none;
+      margin-inline-start: 0;
+    }
+  }
+</style>
+
+<script>
+  /* =====================================================================
+     Alternador de tema
+     El tema inicial se aplica desde un script en línea en el <head>
+     (ver BaseLayout) para evitar el parpadeo al cargar.
+     ===================================================================== */
+  const raiz = document.documentElement;
+  const botonTema = document.getElementById('alternar-tema');
+  const prefiereOscuro = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function temaEfectivo(): 'claro' | 'oscuro' {
+    const atributo = raiz.getAttribute('data-tema');
+    if (atributo === 'claro' || atributo === 'oscuro') return atributo;
+    return prefiereOscuro.matches ? 'oscuro' : 'claro';
+  }
+
+  function pintarBotonTema() {
+    botonTema?.setAttribute('aria-pressed', String(temaEfectivo() === 'oscuro'));
+  }
+
+  botonTema?.addEventListener('click', () => {
+    const nuevo = temaEfectivo() === 'oscuro' ? 'claro' : 'oscuro';
+    raiz.setAttribute('data-tema', nuevo);
+    try {
+      localStorage.setItem('ruway-tema', nuevo);
+    } catch {
+      /* modo privado: se ignora, el sitio funciona igual */
+    }
+    pintarBotonTema();
+  });
+
+  prefiereOscuro.addEventListener('change', pintarBotonTema);
+  pintarBotonTema();
+
+  /* =====================================================================
+     Menú móvil
+     ===================================================================== */
+  const botonMenu = document.getElementById('boton-menu');
+  const panel = document.getElementById('menu-principal');
+
+  if (botonMenu && panel) {
+    const establecerMenu = (abierto: boolean) => {
+      panel.dataset.abierto = String(abierto);
+      botonMenu.setAttribute('aria-expanded', String(abierto));
+      botonMenu.setAttribute(
+        'aria-label',
+        abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación',
+      );
+    };
+
+    botonMenu.addEventListener('click', () => {
+      establecerMenu(panel.dataset.abierto !== 'true');
+    });
+
+    // Escape cierra y devuelve el foco al botón (2.1.2 · 2.4.3)
+    document.addEventListener('keydown', (evento) => {
+      if (evento.key === 'Escape' && panel.dataset.abierto === 'true') {
+        establecerMenu(false);
+        botonMenu.focus();
+      }
+    });
+
+    // Al elegir un destino, el panel se cierra
+    panel.querySelectorAll('a').forEach((enlace) => {
+      enlace.addEventListener('click', () => establecerMenu(false));
+    });
+
+    // Al pasar a escritorio, el panel vuelve a su estado cerrado
+    const consulta = window.matchMedia('(min-width: 64rem)');
+    consulta.addEventListener('change', (e) => {
+      if (e.matches) establecerMenu(false);
+    });
+  }
+</script>

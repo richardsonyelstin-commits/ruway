@@ -1,0 +1,16 @@
+{
+  "name": "RUWAY ACADEMY — Escuela de IA · Cajamarca",
+  "short_name": "RUWAY",
+  "description": "Academia presencial de inteligencia artificial aplicada en Cajamarca. Programa de 8 semanas, 24 sesiones y 48 horas.",
+  "lang": "es-PE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F3F1EA",
+  "theme_color": "#14171E",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/ruway-icono-app-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+  ]
+}

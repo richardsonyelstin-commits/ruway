@@ -1,0 +1,105 @@
+---
+/**
+ * HOME · Bloque 1 — Hero
+ *
+ * Piezas:
+ *  - Eslogan de marca (§2.2) como <h1> único de la página
+ *  - Subcopy con el público y la promesa (§2.5)
+ *  - Insignia con la fecha de inicio: es el activo de conversión más fuerte
+ *    en esta etapa (`01-sitemap-final.md` §5)
+ *  - Doble CTA: demo gratuita (WhatsApp directo, ADR-014) y ver el programa
+ *  - El símbolo de la marca a tamaño grande, revelándose de abajo hacia arriba:
+ *    el trazo es una escalera y el eslogan dice «paso a paso». La animación
+ *    dice lo mismo que el texto, que es lo único que justifica que exista.
+ */
+import { PROGRAMA } from '../../data/programa';
+import { SITIO } from '../../data/site';
+import { CTA_SECUNDARIO } from '../../data/navegacion';
+import { ENLACE_DEMO } from '../../lib/whatsapp';
+import BotonCTA from '../BotonCTA.astro';
+import Icono from '../Icono.astro';
+
+/** El trazo y el punto del símbolo, en el sistema de coordenadas del SVG oficial */
+const TRAZO = 'M27 102V75H51V53H75V40H85V63H61V85H37V102Z';
+---
+
+<section class="relative overflow-hidden" aria-labelledby="hero-titulo">
+  <!-- Fondo escalonado: repite el escalón del símbolo, sin ruido. -->
+  <div
+    class="pointer-events-none absolute inset-0 -z-10 opacity-[0.55]"
+    aria-hidden="true"
+    style="background-image: repeating-linear-gradient(90deg, transparent 0 118px, var(--color-borde) 118px 119px), repeating-linear-gradient(0deg, transparent 0 118px, var(--color-borde) 118px 119px); mask-image: radial-gradient(120% 90% at 78% 30%, #000 0%, transparent 68%);"
+  >
+  </div>
+
+  <div
+    class="mx-auto grid max-w-6xl items-center gap-12 px-5 pt-14 pb-16 md:pt-20 md:pb-24 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8"
+  >
+    <div>
+      <p class="font-mono text-micro tracking-[0.18em] text-acento uppercase">
+        {SITIO.nombre} · {SITIO.sede.distrito}
+      </p>
+
+      <h1
+        id="hero-titulo"
+        class="mt-4 font-display text-display text-balance"
+      >
+        Tu camino a la inteligencia artificial, <span class="text-acento">paso a paso</span>.
+      </h1>
+
+      <p class="mt-5 max-w-xl text-titulo-3 font-normal text-pretty text-texto-suave">
+        {PROGRAMA.resumen}
+      </p>
+
+      <!-- Fecha de inicio. Se anuncia como texto, no como color. -->
+      <p
+        class="mt-7 inline-flex items-center gap-3 rounded-full border border-borde-control bg-superficie py-1.5 pr-5 pl-2"
+      >
+        <span class="grid size-8 shrink-0 place-items-center rounded-full bg-maiz text-piedra">
+          <Icono nombre="calendario" clase="size-4" grosor={2} />
+        </span>
+        <span class="text-pequeno text-texto-suave">
+          Próximo inicio: <strong class="font-semibold text-texto"
+            >{SITIO.ciclo1.inicioTextoCompleto}</strong
+          >
+        </span>
+      </p>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <BotonCTA href={ENLACE_DEMO} externo clase="w-full sm:w-auto">
+          Reserva tu demo gratis
+        </BotonCTA>
+        <BotonCTA href={CTA_SECUNDARIO.href} variante="secundario" clase="w-full sm:w-auto">
+          {CTA_SECUNDARIO.etiqueta}
+        </BotonCTA>
+      </div>
+
+      <p class="mt-4 text-micro text-texto-suave">
+        Clase demo presencial, sin costo y sin compromiso. Cupo de 12 personas.
+      </p>
+    </div>
+
+    <!-- El símbolo de la marca. Decorativo: el encabezado principal ya dice lo
+         mismo con palabras. -->
+    <div class="relative mx-auto w-full max-w-[15rem] lg:max-w-[19rem]">
+      <svg
+        viewBox="0 0 120 120"
+        class="absolute -top-8 -left-8 h-auto w-full text-borde"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d={TRAZO} fill="currentColor"></path>
+        <circle cx="80" cy="25" r="8" fill="currentColor"></circle>
+      </svg>
+      <svg
+        viewBox="0 0 120 120"
+        class="anim-escalones relative h-auto w-full text-maiz"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d={TRAZO} fill="currentColor"></path>
+        <circle cx="80" cy="25" r="8" fill="currentColor"></circle>
+      </svg>
+    </div>
+  </div>
+</section>

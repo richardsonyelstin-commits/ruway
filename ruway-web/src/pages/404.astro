@@ -1,0 +1,101 @@
+---
+/**
+ * /404 — página de error con recuperación.
+ *
+ * El sitemap §4.1 le pide dos cosas: que sea accesible y que lleve de vuelta al
+ * embudo. No usa `PlantillaPagina` a propósito: las migas de pan no significan
+ * nada cuando la ruta pedida no es ninguna de las del mapa, y una cabecera de
+ * página normal daría a entender que esta sí lo es.
+ *
+ * Otros detalles deliberados:
+ *  - `<h1>` propio, para que la página tenga su encabezado (WCAG 2.2 · 2.4.6).
+ *  - `noindex, follow`: que no se indexe la página de error, pero que los
+ *    enlaces que salen de ella sí se sigan (sitemap §10.2).
+ *  - Salidas ordenadas por utilidad real, no alfabéticamente.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icono from '../components/Icono.astro';
+import { ENLACE_CONSULTA } from '../lib/whatsapp';
+
+const SALIDAS = [
+  {
+    etiqueta: 'Ver el programa',
+    href: '/programa',
+    detalle: 'Las 8 semanas, el temario completo y cómo se evalúa.',
+  },
+  {
+    etiqueta: 'Ver precios',
+    href: '/precios',
+    detalle: 'Cuánto cuesta, las cuotas, los descuentos y las devoluciones.',
+  },
+  {
+    etiqueta: 'Preguntas frecuentes',
+    href: '/preguntas-frecuentes',
+    detalle: 'Las doce dudas que todo el mundo tiene, incluida la del certificado.',
+  },
+  {
+    etiqueta: 'Contacto',
+    href: '/contacto',
+    detalle: 'Dónde estamos y cómo escribirnos por WhatsApp.',
+  },
+] as const;
+---
+
+<BaseLayout
+  titulo="Página no encontrada"
+  descripcion="La página que buscas no existe. Desde aquí puedes ir al programa de IA aplicada de RUWAY ACADEMY, a los precios o a preguntas frecuentes."
+  noindex
+>
+  <div class="mx-auto max-w-6xl px-5 py-16 md:py-24">
+    <p class="font-mono text-micro tracking-[0.18em] text-acento uppercase">Error 404</p>
+    <h1 class="mt-3 max-w-3xl font-display text-titulo-1 text-balance">
+      Esta página no existe
+    </h1>
+    <p class="mt-4 max-w-2xl text-titulo-3 font-normal text-pretty text-texto-suave">
+      Puede que el enlace esté mal escrito, o que la página ya no esté. No pasa nada: desde aquí se
+      llega a todo lo demás.
+    </p>
+
+    <ul class="mt-10 grid list-none gap-4 p-0 sm:grid-cols-2">
+      {
+        SALIDAS.map((salida) => (
+          <li>
+            <a
+              href={salida.href}
+              class="flex h-full flex-col justify-between gap-3 rounded-marca border border-borde bg-superficie p-5 text-texto no-underline transition-colors duration-150 hover:border-borde-control"
+            >
+              <span>
+                <span class="flex items-center gap-2 font-display text-titulo-3">
+                  {salida.etiqueta}
+                  <span class="text-acento">
+                    <Icono nombre="flecha" clase="size-4" grosor={2.2} />
+                  </span>
+                </span>
+                <span class="mt-1.5 block text-pequeno text-pretty text-texto-suave">
+                  {salida.detalle}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-borde pt-6">
+      <p class="text-pequeno">
+        <a href="/" class="inline-flex min-h-11 items-center">Volver al inicio</a>
+      </p>
+      <p class="text-pequeno">
+        <a
+          href={ENLACE_CONSULTA}
+          rel="noopener noreferrer"
+          target="_blank"
+          class="inline-flex min-h-11 items-center gap-2 no-underline"
+        >
+          <span class="text-acento"><Icono nombre="mensaje" clase="size-4" grosor={1.8} /></span>
+          Escribir por WhatsApp
+        </a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>

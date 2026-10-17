@@ -1,0 +1,18 @@
+{
+  "fecha": "2026-10-17T03:53:53.296Z",
+  "resumenAxe": {
+    "pasadas": 52,
+    "violaciones": 0,
+    "avisos": 0,
+    "reglasWcag": 70,
+    "reglasTotales": 105
+  },
+  "resumenTeclado": {
+    "paradas": 531,
+    "sinIndicador": [],
+    "tapadas": [],
+    "trampas": [],
+    "primeros": []
+  },
+  "problemas": []
+}

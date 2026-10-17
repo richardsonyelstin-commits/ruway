@@ -1,0 +1,47 @@
+---
+/**
+ * Migas de pan visibles.
+ *
+ * Decisión: la última miga NO es un enlace. Es la página actual, y por eso va
+ * como texto con `aria-current="page"`. Un enlace a la página en la que ya
+ * estás es ruido para quien navega con lector de pantalla.
+ *
+ * Es un `<nav>` con nombre propio: convive con el `<nav>` del header y con los
+ * del footer sin que se confundan entre ellos.
+ */
+import type { Migaja } from '../lib/migajas';
+
+interface Props {
+  migajas: Migaja[];
+}
+
+const { migajas } = Astro.props;
+---
+
+<nav aria-label="Ruta de navegación">
+  <ol class="flex list-none flex-wrap items-center gap-x-2 gap-y-1 p-0 text-pequeno">
+    {
+      migajas.map((migaja, indice) => {
+        const esActual = indice === migajas.length - 1;
+        return (
+          <li class="flex items-center gap-2">
+            {indice > 0 && (
+              <span aria-hidden="true" class="text-borde-control select-none">
+                /
+              </span>
+            )}
+            {esActual ? (
+              <span aria-current="page" class="font-medium text-texto">
+                {migaja.etiqueta}
+              </span>
+            ) : (
+              <a href={migaja.href} class="text-texto-suave no-underline hover:text-texto">
+                {migaja.etiqueta}
+              </a>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>

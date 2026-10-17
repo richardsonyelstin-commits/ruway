@@ -1,0 +1,88 @@
+---
+/**
+ * /preguntas-frecuentes — objeciones de padres y alumnos resueltas de frente.
+ *
+ * Las doce respuestas salen de `src/data/faq.ts`, la misma fuente de la que se
+ * construye el `FAQPage`. Google exige que lo que declara el marcado esté
+ * visible en la página, así que las dos salidas comparten origen por diseño.
+ *
+ * ACCESIBILIDAD DEL ACORDEÓN
+ *   Se usa `<details>` y `<summary>` nativos, no un acordeón con JavaScript.
+ *   Motivo: los nativos ya funcionan con teclado, con lector de pantalla, con
+ *   `Ctrl+F` del navegador (que abre la respuesta que busca) y sin JavaScript.
+ *   Un acordeón propio tendría que reimplementar todo eso y casi siempre lo
+ *   hace peor. Cero líneas de script.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import Seccion from '../components/Seccion.astro';
+import Cierre from '../components/Cierre.astro';
+import Icono from '../components/Icono.astro';
+import { conInicio } from '../lib/migajas';
+import { jsonLdPreguntas } from '../lib/datos-estructurados';
+import { PREGUNTAS, sinEtiquetas } from '../data/faq';
+import { ENLACE_CONSULTA } from '../lib/whatsapp';
+
+const migajas = conInicio({ etiqueta: 'Preguntas frecuentes', href: '/preguntas-frecuentes' });
+
+const titulo = 'Preguntas frecuentes sobre el curso de IA';
+const descripcion =
+  'Doce respuestas claras: edad mínima, laptop, precio, certificado, faltas y devoluciones. Si queda alguna duda, escríbenos por WhatsApp.';
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="Antes de decidir"
+  h1="Las preguntas que todo el mundo hace"
+  entrada="Están las doce, incluidas las incómodas: el certificado no tiene validez oficial y no hay recuperación de clases. Preferimos que lo sepas antes de matricularte."
+  migajas={migajas}
+  jsonLd={jsonLdPreguntas(PREGUNTAS, sinEtiquetas)}
+>
+  <Seccion id="preguntas" eyebrow="Doce preguntas" titulo="Respuestas sin rodeos">
+    <ul class="list-none border-t border-borde p-0">
+      {
+        PREGUNTAS.map((item) => (
+          <li>
+            <details class="group border-b border-borde">
+              <summary class="flex cursor-pointer list-none items-start justify-between gap-4 py-5 font-display text-titulo-3 text-balance text-texto [&::-webkit-details-marker]:hidden">
+                <span>{item.pregunta}</span>
+                <span
+                  class="mt-1.5 shrink-0 text-acento transition-transform duration-200 group-open:rotate-180"
+                  aria-hidden="true"
+                >
+                  <Icono nombre="chevron" clase="size-5" grosor={2} />
+                </span>
+              </summary>
+              <div
+                class="max-w-3xl pb-6 text-cuerpo text-pretty text-texto-suave md:pr-12"
+                set:html={item.respuesta}
+              />
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div
+      class="mt-10 flex flex-col items-start gap-4 rounded-marca border border-borde bg-superficie p-6 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div>
+        <h3 class="font-display text-titulo-3">¿Te quedó otra duda?</h3>
+        <p class="mt-1 text-pequeno text-texto-suave">
+          Escríbenos y te responde el docente, no un robot.
+        </p>
+      </div>
+      <a
+        href={ENLACE_CONSULTA}
+        rel="noopener noreferrer"
+        target="_blank"
+        class="inline-flex min-h-11 shrink-0 items-center gap-2.5 rounded-full bg-maiz px-6 py-3 font-semibold text-sobre-cta no-underline transition-colors duration-150 hover:bg-maiz/90"
+      >
+        <Icono nombre="mensaje" clase="size-5" grosor={1.8} />
+        Preguntar por WhatsApp
+      </a>
+    </div>
+  </Seccion>
+
+  <Cierre />
+</PlantillaPagina>

@@ -1,0 +1,63 @@
+---
+/**
+ * HOME · Bloque 4 — Para quién
+ *
+ * §4.1: un solo grupo con tres perfiles de proyecto. Aquí el visitante se
+ * reconoce: «esto es para alguien como yo».
+ *
+ * Se dice también lo que NO hay, porque es lo que decide a un padre: no hay
+ * préstamo de equipos y hace falta laptop propia (§4.2).
+ */
+import { PARA_QUIEN } from '../../data/programa';
+import Seccion from '../Seccion.astro';
+import Icono from '../Icono.astro';
+---
+
+<Seccion
+  id="para-quien"
+  tono="superficie"
+  eyebrow="Para quién es"
+  titulo="Un solo grupo, tres formas de aprovecharlo"
+  entrada="Trabajamos escolares, universitarios y adultos en la misma aula. Lo que cambia no es la clase: es el proyecto que cada uno construye."
+>
+  <ul class="grid list-none gap-5 p-0 md:grid-cols-3">
+    {
+      PARA_QUIEN.map((perfil) => (
+        <li class="flex flex-col rounded-marca border border-borde bg-fondo p-6">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+            <h3 class="font-display text-titulo-3">{perfil.perfil}</h3>
+            <p class="font-mono text-micro text-texto-suave">{perfil.rango}</p>
+          </div>
+
+          <dl class="mt-5 flex flex-1 flex-col gap-4 text-pequeno">
+            <div>
+              <dt class="font-mono text-micro tracking-[0.12em] text-texto-suave uppercase">
+                Lo que necesitas
+              </dt>
+              <dd class="mt-1 text-pretty text-texto">{perfil.necesidad}</dd>
+            </div>
+            <div class="mt-auto border-t border-borde pt-4">
+              <dt class="font-mono text-micro tracking-[0.12em] text-texto-suave uppercase">
+                Tu proyecto
+              </dt>
+              <dd class="mt-1 font-medium text-pretty text-texto">{perfil.proyecto}</dd>
+            </div>
+          </dl>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p
+    class="mt-6 flex items-start gap-3 rounded-marca border border-borde bg-fondo px-5 py-4 text-pequeno text-texto-suave"
+  >
+    <span class="mt-0.5 shrink-0 text-acento">
+      <Icono nombre="laptop" clase="size-5" />
+    </span>
+    <span>
+      <strong class="font-semibold text-texto">Necesitas tu propia laptop</strong> con un navegador
+      actualizado. No hay equipos en préstamo, y los conocimientos que se piden son básicos: moverte
+      entre archivos, usar el navegador y el correo.
+    </span>
+  </p>
+</Seccion>

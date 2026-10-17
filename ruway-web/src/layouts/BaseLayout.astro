@@ -1,0 +1,148 @@
+---
+/**
+ * BaseLayout — estructura de todas las páginas.
+ *
+ * Responsabilidades:
+ *  - <head> completo: metadatos, canonical, Open Graph, favicons, hojas de estilo
+ *  - tema inicial sin parpadeo (script en línea antes del primer pintado)
+ *  - skip link, landmarks y jerarquía de <main>
+ *  - datos estructurados globales (EducationalOrganization)
+ *
+ * Accesibilidad:
+ *  - <html lang="es-PE"> (WCAG 3.1.1)
+ *  - un solo <main> por página, enfocable por el skip link (2.4.1)
+ *  - el título del documento es único por página (2.4.2)
+ */
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/instrument-sans';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '../styles/global.css';
+
+import SkipLink from '../components/SkipLink.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITIO, DIRECCION_UNA_LINEA } from '../data/site';
+import { ID_ORGANIZACION } from '../lib/datos-estructurados';
+import { normalizarRuta } from '../lib/rutas';
+
+interface Props {
+  /** Título del documento. No incluye el sufijo del sitio. */
+  titulo: string;
+  /** Meta descripción única de la página (140–160 caracteres). */
+  descripcion: string;
+  /** Imagen para compartir en redes. */
+  imagenOg?: string;
+  /** `true` en /gracias y /404. */
+  noindex?: boolean;
+  tipoOg?: 'website' | 'article';
+}
+
+const {
+  titulo,
+  descripcion,
+  imagenOg = '/og/ruway-compartir.png',
+  noindex = false,
+  tipoOg = 'website',
+} = Astro.props;
+
+const ruta = normalizarRuta(Astro.url.pathname);
+const canonical = new URL(ruta, Astro.site).href;
+const imagenAbs = new URL(imagenOg, Astro.site).href;
+const tituloCompleto = `${titulo} · ${SITIO.nombre}`;
+
+/** Datos estructurados globales. NUNCA declarar validez oficial del certificado.
+ *  Lleva `@id` para que el `LocalBusiness` de /contacto y /sobre se una a esta
+ *  misma entidad en lugar de crear un segundo negocio en la misma dirección. */
+const organizacion = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  '@id': ID_ORGANIZACION,
+  name: SITIO.nombre,
+  alternateName: SITIO.nombreCorto,
+  description:
+    'Academia presencial de inteligencia artificial aplicada en Cajamarca, Perú. Programa de 8 semanas, 24 sesiones y 48 horas para personas sin conocimientos previos.',
+  url: SITIO.url,
+  email: SITIO.contacto.correo,
+  telephone: SITIO.contacto.whatsapp.visible,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITIO.sede.calle,
+    addressLocality: SITIO.sede.distrito,
+    addressRegion: SITIO.sede.region,
+    addressCountry: SITIO.sede.paisCodigo,
+  },
+};
+---
+
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    {/* Tema antes del primer pintado: evita el destello de tema incorrecto.
+        Si el usuario no eligió, no se fija nada y decide `prefers-color-scheme`. */}
+    <script is:inline>
+      (function () {
+        try {
+          var guardado = localStorage.getItem('ruway-tema');
+          if (guardado === 'oscuro' || guardado === 'claro') {
+            document.documentElement.setAttribute('data-tema', guardado);
+          }
+        } catch (e) {
+          /* almacenamiento no disponible: se usa la preferencia del sistema */
+        }
+      })();
+    </script>
+
+    {/* Open Graph y Twitter Cards */}
+    <meta property="og:type" content={tipoOg} />
+    <meta property="og:site_name" content={SITIO.nombre} />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imagenAbs} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${SITIO.nombre} · ${SITIO.descriptor}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={tituloCompleto} />
+    <meta name="twitter:description" content={descripcion} />
+    <meta name="twitter:image" content={imagenAbs} />
+
+    {/* Iconos. El SVG es el principal; los PNG cubren navegadores antiguos. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/favicon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    {/* Color de la barra del navegador según el tema */}
+    <meta name="theme-color" content="#f3f1ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14171e" media="(prefers-color-scheme: dark)" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizacion)} />
+
+    {/* Datos estructurados adicionales por página (Course, FAQPage, etc.) */}
+    <slot name="datos-estructurados" />
+  </head>
+
+  <body class="bg-fondo text-texto">
+    <SkipLink />
+    <Header />
+
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <slot name="pie" />
+  </body>
+</html>

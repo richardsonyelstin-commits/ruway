@@ -1,0 +1,200 @@
+---
+/**
+ * /precios — elimina la fricción del «¿cuánto cuesta?».
+ *
+ * Anclas del sitemap §8: `#tarifas` · `#descuentos` · `#devoluciones`.
+ *
+ * Decisiones:
+ *  - Se publica la TABLA COMPLETA del §6.1, incluida la clase personalizada
+ *    1 a 1. Ocultar conceptos que sí existen genera desconfianza justo en la
+ *    página que existe para darla.
+ *  - El precio de lanzamiento se muestra como vigente y el de lista tachado,
+ *    igual que en la portada (ADR-015). Es la misma decisión, no una nueva.
+ *  - La política de devoluciones se publica sin resumir: la tabla del §7.5
+ *    tiene seis situaciones y las seis se van a consultar.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import Seccion from '../components/Seccion.astro';
+import Cierre from '../components/Cierre.astro';
+import Icono from '../components/Icono.astro';
+import { conInicio } from '../lib/migajas';
+import { jsonLdCurso } from '../lib/datos-estructurados';
+import {
+  CONDICION_LANZAMIENTO,
+  DESCUENTOS,
+  DEVOLUCIONES,
+  NOTAS_FACTURACION,
+  NOTAS_PRECIO,
+  OTROS_CONCEPTOS,
+  REGLA_DESCUENTOS,
+  TRAMOS,
+  soles,
+} from '../data/precios';
+import { SITIO } from '../data/site';
+
+const migajas = conInicio({ etiqueta: 'Precios', href: '/precios' });
+
+const titulo = 'Precio del curso de IA en Cajamarca';
+const descripcion =
+  'Precio del programa de IA aplicada en Cajamarca: S/ 550 general y S/ 450 escolar, con IGV incluido. Descuentos, cuotas y política de devoluciones.';
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="La inversión"
+  h1="Precios, descuentos y devoluciones"
+  entrada={`Un solo pago por las ocho semanas, o dos cuotas sin recargo oculto. Todos los precios incluyen IGV, matrícula y certificado. Las primeras 10 matrículas tienen precio de lanzamiento.`}
+  migajas={migajas}
+  jsonLd={jsonLdCurso()}
+>
+  {/* ───────────────────────────── Tarifas ─────────────────────────────── */}
+  <Seccion
+    id="tarifas"
+    eyebrow="Tarifas"
+    titulo="El programa completo, sin costos escondidos"
+    entrada="Estos son todos los precios que existen. El pago único cubre el bimestre entero; las cuotas se pagan al inicio y en la semana 5."
+  >
+    <ul class="grid list-none gap-5 p-0 md:grid-cols-2">
+      {
+        TRAMOS.map((tramo) => (
+          <li class="flex flex-col rounded-marca border border-borde bg-superficie p-6 md:p-8">
+            <p class="font-mono text-micro tracking-[0.14em] text-acento uppercase">
+              {tramo.etiqueta}
+            </p>
+            <p class="mt-1 text-pequeno text-texto-suave">{tramo.publico}</p>
+
+            <p class="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span class="dato text-display leading-none font-semibold text-texto">
+                {soles(tramo.lanzamiento)}
+              </span>
+              <s class="dato text-cuerpo text-texto-suave">
+                <span class="visualmente-oculto">Precio normal: </span>
+                {soles(tramo.normal)}
+              </s>
+            </p>
+            <p class="mt-2 text-pequeno font-medium text-acento">Precio de lanzamiento</p>
+
+            <p class="mt-4 text-pequeno text-pretty text-texto-suave">
+              Todo el bimestre: 8 semanas, 24 sesiones y 48 horas, con matrícula y certificado
+              incluidos.
+            </p>
+
+            <p class="mt-auto border-t border-borde pt-4 text-pequeno text-texto-suave">
+              <span class="dato font-medium text-texto">
+                {tramo.cuotas.cantidad} × {soles(tramo.cuotas.monto)}
+              </span>
+              {' '}si prefieres pagarlo en dos partes.
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-5 rounded-marca border border-maiz bg-superficie px-5 py-4 text-pequeno font-medium text-texto">
+      {CONDICION_LANZAMIENTO}
+      {' '}Cuando se agoten, vuelve el precio de lista.
+    </p>
+
+    <h3 class="mt-12 font-display text-titulo-3">Otros conceptos</h3>
+    <ul class="mt-5 grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2">
+      {
+        OTROS_CONCEPTOS.map((concepto) => (
+          <li class="flex flex-col bg-fondo px-5 py-5">
+            <p class="flex flex-wrap items-baseline justify-between gap-x-3">
+              <span class="font-medium text-texto">{concepto.nombre}</span>
+              <span class="dato font-semibold text-texto">{concepto.precio}</span>
+            </p>
+            <p class="mt-1 text-pequeno text-texto-suave">{concepto.detalle}</p>
+            <p class="mt-1 text-micro text-texto-suave">{concepto.nota}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="mt-8 grid list-none gap-2 p-0 text-pequeno text-texto-suave">
+      {
+        [...NOTAS_PRECIO.filter((n) => !n.startsWith('Precios con IGV')), ...NOTAS_FACTURACION].map((nota) => (
+          <li class="flex items-start gap-2">
+            <span class="mt-1 shrink-0 text-acento">
+              <Icono nombre="comprobado" clase="size-3.5" grosor={2.6} />
+            </span>
+            {nota}
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  {/* ──────────────────────────── Descuentos ───────────────────────────── */}
+  <Seccion
+    id="descuentos"
+    tono="superficie"
+    eyebrow="Descuentos"
+    titulo="Cinco descuentos, y ninguno es secreto"
+    entrada={`${REGLA_DESCUENTOS} Si crees que calificas a alguno, dilo al matricularte: no se aplican de oficio.`}
+  >
+    <ul class="grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 md:grid-cols-2">
+      {
+        DESCUENTOS.map((descuento) => (
+          <li class="flex items-start justify-between gap-4 bg-fondo px-5 py-5">
+            <div>
+              <p class="font-medium text-texto">{descuento.nombre}</p>
+              <p class="mt-1 text-pequeno text-pretty text-texto-suave">{descuento.condicion}</p>
+            </div>
+            <p class="dato shrink-0 font-semibold text-acento">{descuento.monto}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-5 text-pequeno text-texto-suave">
+      El descuento de lanzamiento ya está aplicado en el precio que se muestra arriba: no se suma
+      otra vez.
+    </p>
+  </Seccion>
+
+  {/* ─────────────────────────── Devoluciones ──────────────────────────── */}
+  <Seccion
+    id="devoluciones"
+    eyebrow="Si cambias de opinión"
+    titulo="Política de devoluciones"
+    entrada="Está escrita en el contrato de matrícula y es la misma que se aplica. Si algo no encaja en la tabla, escríbenos antes de matricularte."
+  >
+    <ul class="list-none space-y-px overflow-hidden rounded-marca border border-borde bg-borde p-0">
+      {
+        DEVOLUCIONES.map((fila) => (
+          <li class="grid gap-1 bg-superficie px-5 py-4 sm:grid-cols-[minmax(0,16rem)_1fr] sm:gap-6">
+            <p class="font-medium text-texto">{fila.situacion}</p>
+            <p class="text-pequeno text-pretty text-texto-suave">{fila.politica}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-8 rounded-marca border border-borde bg-superficie p-6">
+      <h3 class="font-display text-titulo-3">Cómo se reserva y cómo se paga</h3>
+      <ol class="mt-3 list-none space-y-2 p-0 text-pequeno text-texto-suave">
+        <li class="flex items-start gap-3">
+          <span class="dato shrink-0 text-acento">01</span>
+          Reservas una clase demo gratuita por WhatsApp. Cupo de 12 personas.
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="dato shrink-0 text-acento">02</span>
+          Asistes a la demo en {SITIO.sede.calle}, {SITIO.sede.distrito}.
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="dato shrink-0 text-acento">03</span>
+          Si decides matricularte, empezamos con el pago único o las dos cuotas.
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="dato shrink-0 text-acento">04</span>
+          Firmas el contrato, las autorizaciones que correspondan y recibes tu boleta de venta
+          electrónica.
+        </li>
+      </ol>
+    </div>
+  </Seccion>
+
+  <Cierre />
+</PlantillaPagina>

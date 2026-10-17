@@ -1,0 +1,90 @@
+---
+/**
+ * Cierre — banda de conversión al final de las páginas internas.
+ *
+ * Es la versión corta del cierre de la Home: aquí el visitante ya leyó el
+ * detalle, así que no hace falta repetir el argumento, solo ofrecer el paso.
+ *
+ * Es configurable porque no todas las páginas venden lo mismo: `/instituciones`
+ * ofrece un taller, el resto una clase demo. Acepta una acción principal y una
+ * secundaria opcional, y las dos se pueden reescribir desde la página.
+ *
+ * Reglas que hereda de `home/CtaFinal.astro` y que no se pueden olvidar:
+ *  - Sobre fondo Maíz, el color de foco del sistema sería Maíz en tema oscuro
+ *    y el anillo sería invisible. La banda redefine `--ruway-foco` y
+ *    `--ruway-acento` a Piedra para todo su contenido.
+ *  - Usa la paleta de marca directamente, así que se ve igual en tema claro y
+ *    en oscuro.
+ */
+import { SITIO } from '../data/site';
+import { ENLACE_DEMO } from '../lib/whatsapp';
+import Icono from './Icono.astro';
+
+interface Accion {
+  etiqueta: string;
+  href: string;
+}
+
+interface Props {
+  /** Título de la banda. Por defecto, el de la reserva de demo. */
+  titulo?: string;
+  /** Una línea de apoyo. */
+  texto?: string;
+  /** Botón relleno. Por defecto, reservar la demo por WhatsApp. */
+  accionPrincipal?: Accion;
+  /** Botón de contorno. Se omite si no se pasa. */
+  accionSecundaria?: Accion;
+}
+
+const {
+  titulo = 'Reserva tu clase demo gratis',
+  texto = `Una hora, sin costo y sin compromiso. Próximo inicio: ${SITIO.ciclo1.inicioTextoCompleto}.`,
+  accionPrincipal = { etiqueta: 'Reservar por WhatsApp', href: ENLACE_DEMO },
+  accionSecundaria = { etiqueta: 'Quiero matricularme', href: '/inscripcion?intencion=matricula' },
+} = Astro.props;
+
+const esWhatsApp = (href: string) => href.startsWith('https://wa.me/');
+const esExterno = (href: string) => /^https?:/i.test(href);
+const relDe = (href: string) => (esExterno(href) ? 'noopener noreferrer' : undefined);
+const targetDe = (href: string) => (esExterno(href) ? '_blank' : undefined);
+---
+
+<section
+  aria-labelledby="cierre-titulo"
+  class="bg-maiz text-piedra"
+  style="--ruway-foco: var(--color-piedra); --ruway-acento: var(--color-piedra);"
+>
+  <div
+    class="mx-auto flex max-w-6xl flex-col items-start gap-7 px-5 py-12 md:flex-row md:items-center md:justify-between md:py-14"
+  >
+    <div class="max-w-xl">
+      <h2 id="cierre-titulo" class="font-display text-titulo-2 text-balance">{titulo}</h2>
+      <p class="mt-2 text-pequeno font-medium text-pretty">{texto}</p>
+    </div>
+
+    <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+      <a
+        href={accionPrincipal.href}
+        rel={relDe(accionPrincipal.href)}
+        target={targetDe(accionPrincipal.href)}
+        class="inline-flex min-h-11 items-center justify-center gap-2.5 rounded-full bg-piedra px-6 py-3 font-semibold text-cal no-underline transition-colors duration-150 hover:bg-piedra/90"
+      >
+        {esWhatsApp(accionPrincipal.href) && <Icono nombre="mensaje" clase="size-5" grosor={1.8} />}
+        {accionPrincipal.etiqueta}
+      </a>
+
+      {
+        accionSecundaria && (
+          <a
+            href={accionSecundaria.href}
+            rel={relDe(accionSecundaria.href)}
+            target={targetDe(accionSecundaria.href)}
+            class="inline-flex min-h-11 items-center justify-center rounded-full border-2 border-piedra px-6 py-3 font-semibold no-underline"
+          >
+            {accionSecundaria.etiqueta}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>

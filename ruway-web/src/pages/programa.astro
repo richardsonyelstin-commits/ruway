@@ -1,0 +1,278 @@
+---
+/**
+ * /programa — el detalle académico completo.
+ *
+ * Anclas del sitemap §8: `#ficha` · `#temario` · `#semana-1` … `#semana-8` ·
+ * `#metodologia` · `#herramientas` · `#evaluacion` · `#certificado`.
+ * Se añade `#resultado` (el perfil del egresado, §5.2): es contenido que el
+ * visitante busca y el sitemap no le asignaba un ancla propia.
+ *
+ * Es la página más larga del sitio y la que más se enlaza desde fuera
+ * (el flujo A entra directo a `#temario`), así que arriba lleva un índice de
+ * saltos: en móvil ahorra mucho desplazamiento.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import Seccion from '../components/Seccion.astro';
+import Cierre from '../components/Cierre.astro';
+import Icono from '../components/Icono.astro';
+import { conInicio } from '../lib/migajas';
+import { jsonLdCurso } from '../lib/datos-estructurados';
+import { SITIO } from '../data/site';
+import {
+  APROBACION,
+  CERTIFICADO,
+  ESTRUCTURA_SESION,
+  EVALUACION,
+  FICHA_PROGRAMA,
+  HERRAMIENTAS,
+  METODOLOGIA,
+  POLITICA_FALTAS,
+  RESULTADO_EGRESADO,
+  TEMARIO,
+} from '../data/programa';
+
+const migajas = conInicio({ etiqueta: 'Programa', href: '/programa' });
+
+const titulo = 'Programa de IA aplicada: temario de 8 semanas';
+const descripcion =
+  'Programa presencial de IA aplicada en Cajamarca: 8 semanas, 24 sesiones y 48 horas. Temario completo, metodología, evaluación, herramientas y certificado.';
+
+const dosDigitos = (n: number) => String(n).padStart(2, '0');
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="El programa"
+  h1="Programa de Inteligencia Artificial Aplicada"
+  entrada={`Ocho semanas, 24 sesiones y 48 horas para pasar de cero a usar la IA con criterio en tus estudios, tu trabajo o tu negocio. Sin conocimientos previos y en grupos de 7 a 10 alumnos. Próximo inicio: ${SITIO.ciclo1.inicioTextoCompleto}.`}
+  migajas={migajas}
+  jsonLd={jsonLdCurso()}
+>
+  {/* ─────────────────────────────── Ficha ─────────────────────────────── */}
+  <Seccion id="ficha" eyebrow="Ficha" titulo="Lo esencial, en ocho datos">
+    <dl class="grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2">
+      {
+        FICHA_PROGRAMA.map((fila) => (
+          <div class="bg-superficie px-5 py-4">
+            <dt class="font-mono text-micro tracking-[0.14em] text-texto-suave uppercase">
+              {fila.campo}
+            </dt>
+            <dd class="mt-1 text-cuerpo text-texto">{fila.valor}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Seccion>
+
+  {/* ────────────────────────────── Resultado ──────────────────────────── */}
+  <Seccion
+    id="resultado"
+    tono="superficie"
+    eyebrow="Al terminar"
+    titulo="Seis cosas que sabrás hacer"
+    entrada="El 60 % de la evaluación es tu proyecto personal. Lo demás acompaña: asistencia, participación y el portafolio."
+  >
+    <ul class="grid list-none gap-x-10 gap-y-5 p-0 md:grid-cols-2">
+      {
+        RESULTADO_EGRESADO.map((punto) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-superficie-alta text-exito">
+              <Icono nombre="comprobado" clase="size-4" grosor={2.4} />
+            </span>
+            <p class="text-cuerpo text-pretty text-texto">{punto}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  {/* ─────────────────────────────── Temario ───────────────────────────── */}
+  <Seccion
+    id="temario"
+    eyebrow="Temario"
+    titulo="Las ocho semanas, una por una"
+    entrada="Cada semana avanzas una parte de tu proyecto. Nada se queda en teoría: al terminar la sesión, tienes algo funcionando."
+  >
+    <nav aria-label="Ir a una semana concreta" class="mb-10">
+      <ol class="flex list-none flex-wrap gap-2 p-0">
+        {
+          TEMARIO.map((semana) => (
+            <li>
+              <a
+                href={`#semana-${semana.numero}`}
+                class="inline-flex min-h-11 items-center gap-2 rounded-full border border-borde-control px-4 text-pequeno text-texto no-underline hover:bg-superficie-alta"
+              >
+                <span class="dato text-texto-suave">{dosDigitos(semana.numero)}</span>
+                {semana.tema}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <ol class="list-none space-y-8 p-0">
+      {
+        TEMARIO.map((semana) => (
+          <li
+            id={`semana-${semana.numero}`}
+            class="grid gap-3 border-t border-borde pt-6 sm:grid-cols-[4rem_1fr] sm:gap-6"
+          >
+            <p
+              class="dato font-display text-titulo-2 leading-none font-semibold text-acento"
+              aria-hidden="true"
+            >
+              {dosDigitos(semana.numero)}
+            </p>
+            <div>
+              <h3 class="font-display text-titulo-3 text-balance">
+                <span class="visualmente-oculto">Semana {semana.numero}: </span>
+                {semana.tema}
+              </h3>
+              <p class="mt-2 text-cuerpo text-pretty text-texto-suave">{semana.contenido}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Seccion>
+
+  {/* ──────────────────────────── Metodología ──────────────────────────── */}
+  <Seccion
+    id="metodologia"
+    tono="superficie"
+    eyebrow="Cómo se enseña"
+    titulo="Aprender haciendo, con acompañamiento"
+    entrada={METODOLOGIA.resumen}
+  >
+    <ul class="grid list-none gap-5 p-0 md:grid-cols-3">
+      {
+        METODOLOGIA.pilares.map((pilar) => (
+          <li class="rounded-marca border border-borde bg-fondo p-6">
+            <h3 class="font-display text-titulo-3 text-balance">{pilar.nombre}</h3>
+            <p class="mt-2 text-pequeno text-pretty text-texto-suave">{pilar.detalle}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h3 class="mt-12 font-display text-titulo-3">Las dos horas de clase</h3>
+    <p class="mt-2 max-w-2xl text-pequeno text-pretty text-texto-suave">
+      Cada sesión sigue la misma estructura. Saberlo de antemano ayuda a llegar preparado y a
+      aprovechar los 35 minutos de práctica autónoma, que es donde avanza tu proyecto.
+    </p>
+
+    <ul class="mt-6 grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2">
+      {
+        ESTRUCTURA_SESION.map((bloque) => (
+          <li class="flex items-start justify-between gap-4 bg-fondo px-5 py-4">
+            <div>
+              <p class="font-medium text-texto">{bloque.momento}</p>
+              <p class="mt-0.5 text-pequeno text-texto-suave">{bloque.actividad}</p>
+            </div>
+            <p class="dato shrink-0 text-pequeno text-acento">{bloque.duracion}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  {/* ──────────────────────────── Herramientas ─────────────────────────── */}
+  <Seccion
+    id="herramientas"
+    eyebrow="Con qué vas a trabajar"
+    titulo="Herramientas reales, todas con plan gratuito"
+    entrada="No enseñamos una herramienta: enseñamos a elegir. Si una plataforma cambia sus condiciones, se sustituye y el alumno no paga la diferencia."
+  >
+    <ul class="grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        HERRAMIENTAS.map((herramienta) => (
+          <li class="flex flex-col gap-1 bg-superficie px-5 py-5">
+            <p class="font-mono text-pequeno font-semibold tracking-tight text-texto">
+              {herramienta.nombre}
+            </p>
+            <p class="text-pequeno text-texto-suave">{herramienta.uso}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Seccion>
+
+  {/* ───────────────────────────── Evaluación ──────────────────────────── */}
+  <Seccion
+    id="evaluacion"
+    tono="superficie"
+    eyebrow="Cómo se evalúa"
+    titulo="Proyecto, asistencia y portafolio"
+    entrada="La evaluación es formativa y continua, y está pensada para que la pueda aplicar un solo docente sin perder el detalle de cada alumno."
+  >
+    <ul class="grid list-none gap-5 p-0 md:grid-cols-3">
+      {
+        EVALUACION.map((componente) => (
+          <li class="flex flex-col rounded-marca border border-borde bg-fondo p-6">
+            <p class="dato text-titulo-1 font-semibold text-acento">{componente.peso}</p>
+            <h3 class="mt-2 font-display text-titulo-3 text-balance">{componente.componente}</h3>
+            <p class="mt-2 text-pequeno text-pretty text-texto-suave">{componente.instrumento}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      <div class="rounded-marca border border-borde bg-fondo p-6">
+        <h3 class="font-display text-titulo-3">Para aprobar</h3>
+        <ul class="mt-3 list-none space-y-2 p-0 text-pequeno text-texto-suave">
+          {
+            APROBACION.criterios.map((criterio) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-0.5 shrink-0 text-exito">
+                  <Icono nombre="comprobado" clase="size-4" grosor={2.4} />
+                </span>
+                {criterio}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-4 border-t border-borde pt-4 text-pequeno text-texto-suave">
+          {APROBACION.formativas}
+        </p>
+      </div>
+
+      <div class="rounded-marca border border-borde bg-fondo p-6">
+        <h3 class="font-display text-titulo-3">Política de faltas</h3>
+        <ul class="mt-3 list-none space-y-2 p-0 text-pequeno text-texto-suave">
+          {POLITICA_FALTAS.map((regla) => <li class="flex items-start gap-3">{regla}</li>)}
+        </ul>
+        <p class="mt-4 border-t border-borde pt-4 text-pequeno text-texto-suave">
+          El calendario reserva dos sesiones de reposición para feriados o fallas de servicio.
+        </p>
+      </div>
+    </div>
+  </Seccion>
+
+  {/* ──────────────────────────── Certificado ──────────────────────────── */}
+  <Seccion
+    id="certificado"
+    eyebrow="Lo que no prometemos"
+    titulo="Hablemos del certificado antes de que preguntes"
+  >
+    <div class="rounded-marca border border-borde border-l-4 border-l-alerta bg-superficie p-6 md:p-8">
+      <div class="flex items-start gap-4">
+        <span class="mt-0.5 hidden shrink-0 text-alerta sm:block">
+          <Icono nombre="escudo" clase="size-7" grosor={1.5} />
+        </span>
+        <div class="max-w-2xl">
+          <p class="font-display text-titulo-3 text-texto">{CERTIFICADO.titulo}</p>
+          <p class="dato mt-1 text-pequeno text-texto-suave">{CERTIFICADO.detalle}</p>
+          <p class="mt-4 text-cuerpo text-pretty text-texto">
+            <strong class="font-semibold">{CERTIFICADO.aclaracion}</strong>
+          </p>
+          <p class="mt-4 text-pequeno text-pretty text-texto-suave">{CERTIFICADO.motivo}</p>
+        </div>
+      </div>
+    </div>
+  </Seccion>
+
+  <Cierre />
+</PlantillaPagina>

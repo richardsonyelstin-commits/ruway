@@ -1,0 +1,31 @@
+---
+/**
+ * HOME · Bloque 2 — Barra de datos
+ *
+ * Prueba rápida justo debajo del hero: los cinco números que un padre o un
+ * alumno necesita para saber si esto encaja con su vida.
+ *
+ * Accesibilidad: es una lista de descripción (`<dl>`), no una fila de texto
+ * suelto. Un lector de pantalla anuncia «Duración: 8 semanas», no cinco
+ * fragmentos sin relación. Los números usan cifras tabulares para que no
+ * bailen.
+ */
+import { BARRA_DATOS } from '../../data/programa';
+---
+
+<div class="border-y border-borde bg-superficie">
+  <dl
+    class="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-7 px-5 py-8 sm:grid-cols-3 lg:grid-cols-5"
+  >
+    {
+      BARRA_DATOS.map((dato) => (
+        <div>
+          <dt class="font-mono text-micro tracking-[0.14em] text-texto-suave uppercase">
+            {dato.etiqueta}
+          </dt>
+          <dd class="dato mt-1.5 text-titulo-3 font-semibold text-texto">{dato.valor}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>

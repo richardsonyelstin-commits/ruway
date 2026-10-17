@@ -1,0 +1,57 @@
+---
+/**
+ * Retorno — vuelta al embudo al final de las páginas informativas.
+ *
+ * Las páginas legales no venden, y no deben hacerlo: quien está leyendo la
+ * política de privacidad quiere entenderla, no que le vendan algo. Pero tampoco
+ * pueden ser un callejón sin salida (el sitemap §11 lo exige: toda página tiene
+ * retorno al embudo). Este bloque resuelve las dos cosas: va al final, es
+ * sobrio y no usa ni el amarillo ni el botón grande de las páginas de venta.
+ */
+import Icono from './Icono.astro';
+import { ENLACE_CONSULTA } from '../lib/whatsapp';
+
+const ENLACES = [
+  { etiqueta: 'Ver el programa', href: '/programa' },
+  { etiqueta: 'Ver precios', href: '/precios' },
+  { etiqueta: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
+  { etiqueta: 'Contacto', href: '/contacto' },
+];
+---
+
+<section aria-labelledby="retorno-titulo" class="border-t border-borde bg-superficie">
+  <div class="mx-auto max-w-6xl px-5 py-12">
+    <h2 id="retorno-titulo" class="font-display text-titulo-3">¿Y ahora qué?</h2>
+    <p class="mt-2 max-w-2xl text-pequeno text-pretty text-texto-suave">
+      Ya sabes cómo trabajamos y qué se firma al matricularse. Estos son los siguientes pasos,
+      cuando quieras.
+    </p>
+
+    <ul class="mt-5 flex list-none flex-wrap gap-2 p-0">
+      {
+        ENLACES.map((enlace) => (
+          <li>
+            <a
+              href={enlace.href}
+              class="inline-flex min-h-11 items-center rounded-full border border-borde-control px-4 text-pequeno text-texto no-underline hover:bg-superficie-alta"
+            >
+              {enlace.etiqueta}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-5 text-pequeno">
+      <a
+        href={ENLACE_CONSULTA}
+        rel="noopener noreferrer"
+        target="_blank"
+        class="inline-flex min-h-11 items-center gap-2 no-underline"
+      >
+        <span class="text-acento"><Icono nombre="mensaje" clase="size-4" grosor={1.8} /></span>
+        O pregúntanos por WhatsApp
+      </a>
+    </p>
+  </div>
+</section>

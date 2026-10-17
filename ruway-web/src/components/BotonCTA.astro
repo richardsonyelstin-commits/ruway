@@ -1,0 +1,35 @@
+---
+/**
+ * Botón de conversión. Es un <a> porque navega, no un <button>.
+ *
+ * Accesibilidad:
+ *  - Objetivo táctil de 44 px de alto (mínimo exigido: 24 px — WCAG 2.5.8)
+ *  - Variante primaria: fondo Maíz + texto Piedra = 9.62:1 en ambos temas
+ *  - El contraste nunca depende solo del color: hay borde en la secundaria
+ */
+interface Props {
+  href: string;
+  variante?: 'primario' | 'secundario';
+  externo?: boolean;
+  clase?: string;
+}
+
+const { href, variante = 'primario', externo = false, clase = '' } = Astro.props;
+
+const base =
+  'inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-6 py-3 ' +
+  'text-center font-semibold no-underline transition-colors duration-150';
+
+const estilos =
+  variante === 'primario'
+    ? 'bg-maiz text-sobre-cta hover:brightness-95'
+    : 'border border-borde-control text-texto hover:bg-superficie-alta';
+---
+
+<a
+  href={href}
+  class={`${base} ${estilos} ${clase}`}
+  {...externo ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+>
+  <slot />
+</a>

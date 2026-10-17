@@ -1,0 +1,87 @@
+---
+/**
+ * HOME · Bloque 8 — Precio resumido
+ *
+ * Filtro temprano: quien no puede pagarlo se ahorra la conversación, y quien
+ * puede lo ve antes de decidir. Los dos precios son los del §6.1 y §11.3.
+ *
+ * DECISIÓN DEL RESPONSABLE (2026-10-16)
+ *   Se muestra el precio de LANZAMIENTO como vigente y el de lista tachado al
+ *   lado, con la condición real a la vista. Nada de «desde» ni de asteriscos:
+ *   el precio que se ve es el que se cobra mientras queden plazas.
+ *
+ * ACCESIBILIDAD
+ *   El precio tachado lleva además el texto «Precio normal» para lectores de
+ *   pantalla. Sin eso, quien no ve el tachado leería dos cifras sin saber cuál
+ *   es cuál (WCAG 2.2 · 1.3.1).
+ */
+import { TRAMOS, CONDICION_LANZAMIENTO, NOTAS_PRECIO, soles } from '../../data/precios';
+import Seccion from '../Seccion.astro';
+import Icono from '../Icono.astro';
+---
+
+<Seccion
+  id="precio"
+  tono="superficie"
+  eyebrow="La inversión"
+  titulo="Precio de lanzamiento para las primeras 10 matrículas"
+  entrada="Un solo pago por las 8 semanas, o dos cuotas sin recargo oculto. Los precios ya incluyen IGV."
+>
+  <ul class="grid list-none gap-5 p-0 md:grid-cols-2 lg:max-w-4xl">
+    {
+      TRAMOS.map((tramo) => (
+        <li class="flex flex-col rounded-marca border border-borde bg-fondo p-6">
+          <p class="font-mono text-micro tracking-[0.14em] text-acento uppercase">
+            {tramo.etiqueta}
+          </p>
+          <p class="mt-1 text-pequeno text-texto-suave">{tramo.publico}</p>
+
+          <p class="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span class="dato text-titulo-1 font-semibold text-texto">
+              {soles(tramo.lanzamiento)}
+            </span>
+            <s class="dato text-pequeno text-texto-suave">
+              <span class="visualmente-oculto">Precio normal: </span>
+              {soles(tramo.normal)}
+            </s>
+          </p>
+
+          <p class="mt-1 text-pequeno text-texto-suave">
+            Todo el bimestre, matrícula y certificado incluidos.
+          </p>
+
+          <p class="mt-auto border-t border-borde pt-4 text-pequeno text-texto-suave">
+            <span class="dato font-medium text-texto">
+              {tramo.cuotas.cantidad} × {soles(tramo.cuotas.monto)}
+            </span>
+            {' '}si prefieres pagarlo en dos partes.
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <ul class="mt-6 grid list-none gap-2 p-0 text-pequeno text-texto-suave">
+    {
+      NOTAS_PRECIO.map((nota) => (
+        <li class="flex items-start gap-2">
+          <span class="mt-1 shrink-0 text-acento">
+            <Icono nombre="comprobado" clase="size-3.5" grosor={2.6} />
+          </span>
+          {nota}
+        </li>
+      ))
+    }
+    <li class="flex items-start gap-2">
+      <span class="mt-1 shrink-0 text-acento">
+        <Icono nombre="comprobado" clase="size-3.5" grosor={2.6} />
+      </span>
+      {CONDICION_LANZAMIENTO}
+    </li>
+  </ul>
+
+  <p class="mt-6 text-pequeno">
+    <a href="/precios">Ver los descuentos, las formas de pago y la política de devoluciones</a>
+    <span aria-hidden="true"> →</span>
+  </p>
+</Seccion>

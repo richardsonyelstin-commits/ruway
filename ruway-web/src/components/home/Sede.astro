@@ -1,0 +1,61 @@
+---
+/**
+ * HOME · Bloque 9 — Sede
+ *
+ * Confianza para quien decide (normalmente un padre): dónde queda, cuándo es
+ * y qué hay en el local. §8.1 y §5.1.
+ *
+ * El enlace a Google Maps es una búsqueda por la dirección, no un dato
+ * inventado: no tenemos coordenadas confirmadas, y publicar unas falsas sería
+ * peor que no publicar ninguna.
+ */
+import { SEDE } from '../../data/programa';
+import { ENLACE_MAPA } from '../../data/site';
+import Seccion from '../Seccion.astro';
+import Icono from '../Icono.astro';
+---
+
+<Seccion
+  id="sede"
+  eyebrow="Dónde y cuándo"
+  titulo="En el centro de Cajamarca"
+  entrada="Local propio, preparado para trabajar: enchufes y regletas para diez laptops, iluminación y conexión de fibra."
+>
+  <div class="grid gap-5 md:grid-cols-2">
+    <div class="rounded-marca border border-borde bg-superficie p-6">
+      <h3 class="flex items-center gap-2.5 font-display text-titulo-3">
+        <span class="text-acento"><Icono nombre="mapa" clase="size-5" /></span>
+        Dirección
+      </h3>
+      <address class="mt-3 text-cuerpo not-italic text-texto">
+        {SEDE.calle}<br />
+        {SEDE.ciudad}, {SEDE.pais}
+      </address>
+      <p class="mt-3 text-pequeno text-texto-suave">{SEDE.referencia}</p>
+      <p class="mt-4 text-pequeno">
+        <a href={ENLACE_MAPA} rel="noopener noreferrer" target="_blank">
+          Ver la ubicación en Google Maps
+        </a>
+      </p>
+    </div>
+
+    <div class="rounded-marca border border-borde bg-superficie p-6">
+      <h3 class="flex items-center gap-2.5 font-display text-titulo-3">
+        <span class="text-acento"><Icono nombre="reloj" clase="size-5" /></span>
+        Horario de clases
+      </h3>
+      <p class="mt-3 text-cuerpo text-texto">
+        {SEDE.horario}<br />
+        <span class="dato">{SEDE.horarioDetalle}</span>
+      </p>
+      <p class="mt-3 text-pequeno text-texto-suave">
+        Ocho semanas continuas, con dos sesiones de reposición reservadas para feriados o fallas de
+        servicio.
+      </p>
+      <p class="mt-4 text-pequeno">
+        <a href="/contacto">Cómo llegar y cómo escribirnos</a>
+        <span aria-hidden="true"> →</span>
+      </p>
+    </div>
+  </div>
+</Seccion>

@@ -1,0 +1,49 @@
+---
+/**
+ * Marca RUWAY (logo horizontal).
+ *
+ * El manual de marca define dos versiones según el fondo:
+ *   - «claro»  → para fondos claros
+ *   - «oscuro» → para fondos oscuros
+ * Se incluyen las dos y el CSS muestra la correcta. Así el logo cambia solo
+ * al alternar el tema, sin JavaScript y sin recargar.
+ *
+ * Las dimensiones son explícitas (377.35 × 120 de origen) para evitar CLS.
+ */
+interface Props {
+  /** Altura en píxeles. El ancho se calcula con la proporción real del logo. */
+  alto?: number;
+  /** Texto alternativo. Usa '' cuando el logo sea decorativo. */
+  alt?: string;
+  clase?: string;
+}
+
+const { alto = 40, alt = 'RUWAY Academy · Escuela de IA en Cajamarca', clase = '' } = Astro.props;
+const ancho = Math.round((alto * 377.35) / 120);
+---
+
+<span class={`marca ${clase}`}>
+  <img
+    src="/logos/ruway-logo-horizontal-claro.svg"
+    alt={alt}
+    width={ancho}
+    height={alto}
+    class="solo-claro"
+    decoding="async"
+  />
+  <img
+    src="/logos/ruway-logo-horizontal-oscuro.svg"
+    alt={alt}
+    width={ancho}
+    height={alto}
+    class="solo-oscuro"
+    decoding="async"
+  />
+</span>
+
+<style>
+  .marca {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

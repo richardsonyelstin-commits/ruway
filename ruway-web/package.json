@@ -1,0 +1,34 @@
+{
+  "name": "ruway-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sitio oficial de RUWAY ACADEMY · Escuela de IA · Cajamarca",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "auditar": "node scripts/auditar-html.mjs",
+    "enlaces": "node scripts/verificar-enlaces.mjs",
+    "jsonld": "node scripts/verificar-datos-estructurados.mjs",
+    "verificar": "astro build && node scripts/auditar-html.mjs && node scripts/verificar-enlaces.mjs && node scripts/verificar-datos-estructurados.mjs",
+    "og": "node scripts/generar-og.mjs",
+    "capturar": "node scripts/capturar.mjs",
+    "probar-formulario": "node scripts/probar-formulario.mjs",
+    "auditar-a11y": "node scripts/auditar-accesibilidad.mjs",
+    "auditar-rendimiento": "node scripts/auditar-rendimiento.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/instrument-sans": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "lighthouse": "^13.5.0"
+  }
+}

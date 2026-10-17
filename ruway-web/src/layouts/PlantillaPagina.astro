@@ -1,0 +1,86 @@
+---
+/**
+ * PlantillaPagina — esqueleto de toda página interna.
+ *
+ * Aporta lo que TODAS las páginas internas necesitan y ninguna debería
+ * reimplementar:
+ *
+ *   1. La banda de cabecera: migas de pan + `<h1>` + entrada.
+ *   2. El `<h1>` único de la página (WCAG 2.2 · 2.4.6: el encabezado describe
+ *      el tema, no «Bienvenido»).
+ *   3. El `BreadcrumbList` de datos estructurados, construido con las MISMAS
+ *      migas que se ven en pantalla — así no pueden divergir.
+ *   4. El resto de datos estructurados de la página, en un solo `@graph`.
+ *
+ * La banda de cabecera es un `<div>`, no un `<header>` ni un `<section>`: no
+ * añade ningún landmark y no compite con el `<header>` del sitio.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Migajas from '../components/Migajas.astro';
+import { jsonLdMigajas, type Migaja } from '../lib/migajas';
+
+interface Props {
+  /** Parte del título del documento propia de esta página. */
+  titulo: string;
+  /** Meta descripción única, de 140 a 160 caracteres. */
+  descripcion: string;
+  /** Etiqueta corta en monoespaciada sobre el `<h1>`. */
+  eyebrow?: string;
+  /** El `<h1>` de la página. Uno solo, y describe el tema. */
+  h1: string;
+  /** Párrafo de entrada bajo el `<h1>`. */
+  entrada?: string;
+  /** Migas de pan. Deben empezar por «Inicio». */
+  migajas: Migaja[];
+  /** `true` en /gracias y /404. */
+  noindex?: boolean;
+  /** Datos estructurados extra, sin `@context` (Course, FAQPage, LocalBusiness…). */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  titulo,
+  descripcion,
+  eyebrow,
+  h1,
+  entrada,
+  migajas,
+  noindex = false,
+  jsonLd,
+} = Astro.props;
+
+const extra = Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [];
+
+const grafo = {
+  '@context': 'https://schema.org',
+  '@graph': [jsonLdMigajas(migajas), ...extra],
+};
+---
+
+<BaseLayout titulo={titulo} descripcion={descripcion} noindex={noindex}>
+  <div class="border-b border-borde bg-superficie">
+    <div class="mx-auto max-w-6xl px-5 pt-8 pb-12 md:pt-10 md:pb-16">
+      <Migajas migajas={migajas} />
+
+      <div class="mt-6 max-w-3xl">
+        {
+          eyebrow && (
+            <p class="font-mono text-micro tracking-[0.18em] text-acento uppercase">{eyebrow}</p>
+          )
+        }
+        <h1 class="mt-3 font-display text-titulo-1 text-balance">{h1}</h1>
+        {
+          entrada && (
+            <p class="mt-4 text-titulo-3 font-normal text-pretty text-texto-suave">{entrada}</p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <slot />
+
+  <Fragment slot="datos-estructurados">
+    <script type="application/ld+json" set:html={JSON.stringify(grafo)} />
+  </Fragment>
+</BaseLayout>

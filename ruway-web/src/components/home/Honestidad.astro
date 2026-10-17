@@ -1,0 +1,40 @@
+---
+/**
+ * HOME · Bloque 10 — Honestidad
+ *
+ * §5.7 y el `SOUL.md` de la marca: el certificado NO tiene validez oficial del
+ * MINEDU, y eso se dice siempre, en el mismo sitio y con la misma claridad.
+ *
+ * Está a la vista en la portada y no escondido en el pie porque es un
+ * diferenciador de marca, no un aviso legal: la transparencia es lo que hace
+ * creíble el resto de la página. Si aquí exageráramos, nada de lo de arriba
+ * valdría.
+ */
+import { CERTIFICADO } from '../../data/programa';
+import Seccion from '../Seccion.astro';
+import Icono from '../Icono.astro';
+---
+
+<Seccion
+  id="certificado"
+  eyebrow="Lo que no prometemos"
+  titulo="Hablemos del certificado antes de que preguntes"
+>
+  <div class="rounded-marca border border-borde border-l-4 border-l-alerta bg-superficie p-6 md:p-8">
+    <div class="flex items-start gap-4">
+      <span class="mt-0.5 hidden shrink-0 text-alerta sm:block">
+        <Icono nombre="escudo" clase="size-7" grosor={1.5} />
+      </span>
+      <div class="max-w-2xl">
+        <p class="font-display text-titulo-3 text-texto">{CERTIFICADO.titulo}</p>
+        <p class="dato mt-1 text-pequeno text-texto-suave">{CERTIFICADO.detalle}</p>
+
+        <p class="mt-4 text-cuerpo text-pretty text-texto">
+          <strong class="font-semibold">{CERTIFICADO.aclaracion}</strong>
+        </p>
+
+        <p class="mt-4 text-pequeno text-pretty text-texto-suave">{CERTIFICADO.motivo}</p>
+      </div>
+    </div>
+  </div>
+</Seccion>

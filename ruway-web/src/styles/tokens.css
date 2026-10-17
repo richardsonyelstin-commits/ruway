@@ -1,0 +1,196 @@
+/* ============================================================================
+   RUWAY · DESIGN TOKENS
+   ----------------------------------------------------------------------------
+   Fuente de verdad: ruway-identidad/LEEME.txt  +  00-inventario-insumos.md §2
+   Documentación:   03-sistema-diseno.md
+
+   ORGANIZACIÓN
+     Capa 1 · Paleta oficial de marca ............ 6 colores, intocables
+     Capa 2 · Tokens semánticos .................. tema claro / tema oscuro
+     Capa 3 · Tipografía, radios, movimiento ..... escalas del sistema
+
+   REGLA DE ORO
+     No se añaden colores nuevos a la marca. Todo token derivado se obtiene
+     MEZCLANDO la paleta oficial con `color-mix()`, de modo que la derivación
+     sea explícita, auditable y trazable.
+   ========================================================================= */
+
+@import "tailwindcss";
+
+/* ============================================================================
+   CAPA 1 · PALETA OFICIAL DE MARCA
+   Exactamente los 6 colores del manual. No modificar.
+   ========================================================================= */
+@theme {
+  --color-piedra: #14171e;   /* Piedra  */
+  --color-cal:    #f3f1ea;   /* Cal     */
+  --color-maiz:   #f0b429;   /* Maíz    */
+  --color-teja:   #be3a1b;   /* Teja    */
+  --color-ichu:   #1f6b4f;   /* Ichu    */
+  --color-niebla: #9aa0ae;   /* Niebla  */
+
+  /* --------------------------------------------------------------------------
+     TIPOGRAFÍA
+     Bricolage Grotesque (títulos) · Instrument Sans (texto) · JetBrains Mono (etiquetas)
+     Self-hosted vía @fontsource → sin peticiones a terceros (privacidad + LCP).
+     ------------------------------------------------------------------------ */
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:    "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-display:    clamp(2.25rem, 5.5vw, 3.75rem);
+  --text-display--line-height: 1.03;
+  --text-titulo-1:   clamp(1.875rem, 4vw, 2.75rem);
+  --text-titulo-1--line-height: 1.1;
+  --text-titulo-2:   clamp(1.5rem, 2.8vw, 2rem);
+  --text-titulo-2--line-height: 1.15;
+  --text-titulo-3:   1.25rem;
+  --text-titulo-3--line-height: 1.25;
+  --text-cuerpo:     1rem;
+  --text-cuerpo--line-height: 1.65;
+  --text-pequeno:    0.875rem;
+  --text-pequeno--line-height: 1.5;
+  --text-micro:      0.75rem;
+  --text-micro--line-height: 1.4;
+
+  /* --------------------------------------------------------------------------
+     RADIOS
+     El símbolo de RUWAY es un cuadrado de radio 26/120. `--radius-marca`
+     reproduce esa proporción: es la firma geométrica de la marca.
+     ------------------------------------------------------------------------ */
+  --radius-xs:    0.375rem;  /*  6 px */
+  --radius-sm:    0.625rem;  /* 10 px */
+  --radius-md:    1rem;      /* 16 px */
+  --radius-lg:    1.375rem;  /* 22 px */
+  --radius-marca: 1.625rem;  /* 26 px — radio exacto del isotipo */
+  --radius-full:  9999px;
+
+  /* --------------------------------------------------------------------------
+     MOVIMIENTO
+     Se aplica SIEMPRE dentro de `prefers-reduced-motion: no-preference`.
+     Ver global.css → la animación es la mejora, nunca el estado por defecto.
+     ------------------------------------------------------------------------ */
+  --ease-salida:  cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-entrada: cubic-bezier(0.4, 0, 1, 1);
+  --ease-suave:   cubic-bezier(0.33, 0, 0.2, 1);
+
+  /* Escala de espaciado adicional para secciones */
+  --spacing-seccion: 5rem;
+}
+
+/* Tokens de movimiento (no generan utilidades de Tailwind; se usan en CSS) */
+:root {
+  --dur-rapida: 150ms;
+  --dur-media:  250ms;
+  --dur-lenta:  400ms;
+  --altura-header: 4.5rem;
+}
+
+/* ============================================================================
+   CAPA 2 · TOKENS SEMÁNTICOS
+   Ningún componente usa la paleta de marca directamente: usan estos tokens.
+   Así, cambiar de tema no requiere tocar un solo componente.
+   ========================================================================= */
+@theme inline {
+  --color-fondo:         var(--ruway-fondo);
+  --color-superficie:    var(--ruway-superficie);
+  --color-superficie-alta: var(--ruway-superficie-alta);
+  --color-texto:         var(--ruway-texto);
+  --color-texto-suave:   var(--ruway-texto-suave);
+  --color-acento:        var(--ruway-acento);
+  --color-borde:         var(--ruway-borde);
+  --color-borde-control: var(--ruway-borde-control);
+  --color-foco:          var(--ruway-foco);
+  --color-exito:         var(--ruway-exito);
+  --color-alerta:        var(--ruway-alerta);
+  --color-sobre-cta:     var(--ruway-sobre-cta);
+}
+
+/* ---------------------------------------------------------------- TEMA CLARO */
+:root {
+  color-scheme: light;
+
+  /* Superficies: fondo = Cal. La elevación se obtiene ACLARANDO Cal hacia blanco. */
+  --ruway-fondo:           #f3f1ea;                                   /* Cal */
+  --ruway-superficie:      color-mix(in srgb, #f3f1ea 78%, #ffffff);
+  --ruway-superficie-alta: color-mix(in srgb, #f3f1ea 55%, #ffffff);
+
+  /* Texto. Principal 15.9:1 · suave 5.85:1 (AA en ambos casos) */
+  --ruway-texto:       #14171e;                                       /* Piedra */
+  --ruway-texto-suave: color-mix(in srgb, #14171e 68%, #f3f1ea);
+
+  /* Acento. Teja sobre Cal = 4.88:1 → AA */
+  --ruway-acento: #be3a1b;                                            /* Teja */
+
+  /* Bordes. Decorativo: sin requisito. Control (inputs): ≥ 3:1 → 5.4:1 */
+  --ruway-borde:         color-mix(in srgb, #9aa0ae 42%, #f3f1ea);
+  --ruway-borde-control: color-mix(in srgb, #9aa0ae 55%, #14171e);
+
+  /* Foco: Piedra sobre Cal = 15.9:1 */
+  --ruway-foco: #14171e;
+
+  /* Estados. Ichu sobre Cal = 5.68:1 → AA */
+  --ruway-exito:  #1f6b4f;                                            /* Ichu */
+  --ruway-alerta: #be3a1b;                                            /* Teja */
+
+  /* Texto sobre el botón de CTA (fondo Maíz) → Piedra = 9.62:1 */
+  --ruway-sobre-cta: #14171e;
+}
+
+/* --------------------------------------------------------------- TEMA OSCURO */
+:root[data-tema="oscuro"] {
+  color-scheme: dark;
+
+  --ruway-fondo:           #14171e;                                   /* Piedra */
+  --ruway-superficie:      color-mix(in srgb, #14171e 90%, #f3f1ea);
+  --ruway-superficie-alta: color-mix(in srgb, #14171e 82%, #f3f1ea);
+
+  /* Texto. Cal sobre Piedra = 15.9:1 · Niebla sobre Piedra = 6.84:1 */
+  --ruway-texto:       #f3f1ea;                                       /* Cal */
+  --ruway-texto-suave: #9aa0ae;                                       /* Niebla */
+
+  /* Acento. Maíz sobre Piedra = 9.62:1 → AAA */
+  --ruway-acento: #f0b429;                                            /* Maíz */
+
+  /* Bordes. Control: mezcla Niebla/Piedra al 60% = 3.26:1 → cumple 1.4.11 */
+  --ruway-borde:         color-mix(in srgb, #9aa0ae 28%, #14171e);
+  --ruway-borde-control: color-mix(in srgb, #9aa0ae 60%, #14171e);
+
+  /* Foco: Maíz sobre Piedra = 9.62:1 */
+  --ruway-foco: #f0b429;
+
+  /* Estados derivados por mezcla (Ichu sobre Piedra = 2.8:1 → NO usable tal cual).
+     Ichu 55 % + Cal 45 % = 6.70:1 · Teja 50 % + Cal 50 % = 7.38:1 */
+  --ruway-exito:  color-mix(in srgb, #1f6b4f 55%, #f3f1ea);
+  --ruway-alerta: color-mix(in srgb, #be3a1b 50%, #f3f1ea);
+
+  --ruway-sobre-cta: #14171e;                                         /* sobre Maíz */
+}
+
+/* El tema oscuro también puede activarse por preferencia del sistema,
+   mientras el usuario no haya elegido explícitamente uno u otro.
+   (Se mantiene en sincronía con el bloque de arriba: mismos valores.) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema]) {
+    color-scheme: dark;
+
+    --ruway-fondo:           #14171e;
+    --ruway-superficie:      color-mix(in srgb, #14171e 90%, #f3f1ea);
+    --ruway-superficie-alta: color-mix(in srgb, #14171e 82%, #f3f1ea);
+
+    --ruway-texto:       #f3f1ea;
+    --ruway-texto-suave: #9aa0ae;
+
+    --ruway-acento: #f0b429;
+
+    --ruway-borde:         color-mix(in srgb, #9aa0ae 28%, #14171e);
+    --ruway-borde-control: color-mix(in srgb, #9aa0ae 60%, #14171e);
+
+    --ruway-foco: #f0b429;
+
+    --ruway-exito:  color-mix(in srgb, #1f6b4f 55%, #f3f1ea);
+    --ruway-alerta: color-mix(in srgb, #be3a1b 50%, #f3f1ea);
+
+    --ruway-sobre-cta: #14171e;
+  }
+}

@@ -1,0 +1,193 @@
+---
+/**
+ * /contacto — NAP + mapa + canales + formulario (SEO local).
+ *
+ * Anclas del sitemap §8: `#mapa` · `#formulario`.
+ *
+ * DOS DECISIONES QUE CONVIENE ENTENDER
+ *
+ * 1. NO se incrusta el mapa de Google en un `<iframe>`.
+ *    Motivo: un iframe de Google Maps instala cookies de terceros en el
+ *    primer pintado, sin que el visitante haya hecho nada. Eso obligaría a
+ *    montar un banner de consentimiento en un sitio que hoy no usa una sola
+ *    cookie, y contradiría la página /cookies. La dirección va escrita, con el
+ *    enlace que abre la app o el navegador del visitante. Misma utilidad, cero
+ *    rastreo, y de paso se carga la página mucho más rápido.
+ *
+ * 2. `#formulario` (id fijado por el sitemap) ofrece las DOS vías, en este
+ *    orden: primero el formulario —que sirve igual para la demo que para la
+ *    matrícula— y debajo los canales directos. Los canales directos no se
+ *    quitan: hay quien prefiere escribir sin rellenar nada, y WhatsApp es el
+ *    canal que el plan (§11.1) identifica como principal.
+ *
+ * El horario de ATENCIÓN presencial sigue `[POR DEFINIR]`. En vez de publicar
+ * ese texto entre corchetes se explica la situación con palabras normales: el
+ * horario de clases sí se conoce y se publica.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import Seccion from '../components/Seccion.astro';
+import Cierre from '../components/Cierre.astro';
+import Formulario from '../components/Formulario.astro';
+import Icono from '../components/Icono.astro';
+import { conInicio } from '../lib/migajas';
+import { jsonLdNegocioLocal } from '../lib/datos-estructurados';
+import { ENLACE_MAPA, SITIO } from '../data/site';
+import { SEDE } from '../data/programa';
+import { ENLACE_CONSULTA, ENLACE_DEMO } from '../lib/whatsapp';
+
+const migajas = conInicio({ etiqueta: 'Contacto', href: '/contacto' });
+
+const titulo = 'Contacto: academia de IA en Cajamarca';
+const descripcion =
+  'Visítanos en Jr. Los Geranios 250, Cajamarca. Escríbenos por WhatsApp al +51 930 736 214 o por correo. Clases martes, jueves y viernes de 4 a 6 pm.';
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="Contacto"
+  h1="Dónde encontrarnos y cómo escribirnos"
+  entrada={`Estamos en ${SEDE.calle}, ${SEDE.ciudad}. La vía más rápida para una respuesta es WhatsApp: ${SITIO.contacto.whatsapp.visible}.`}
+  migajas={migajas}
+  jsonLd={jsonLdNegocioLocal()}
+>
+  {/* ──────────────────────────────── Mapa ──────────────────────────────── */}
+  <Seccion
+    id="mapa"
+    eyebrow="La sede"
+    titulo="En el centro de Cajamarca, con dirección exacta"
+    entrada="Una academia presencial que no publica su dirección no genera confianza. Esta es la nuestra, y el horario en el que hay gente en el aula."
+  >
+    <div class="grid gap-5 md:grid-cols-2">
+      <div class="flex flex-col rounded-marca border border-borde bg-superficie p-6">
+        <h3 class="flex items-center gap-2.5 font-display text-titulo-3">
+          <span class="text-acento"><Icono nombre="mapa" clase="size-5" /></span>
+          Dirección
+        </h3>
+        <address class="mt-3 text-cuerpo not-italic text-texto">
+          {SITIO.sede.calle}<br />
+          {SITIO.sede.distrito}, {SITIO.sede.pais}
+        </address>
+        <p class="mt-3 text-pequeno text-texto-suave">{SEDE.referencia}</p>
+        <p class="mt-auto pt-4">
+          <a
+            href={ENLACE_MAPA}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="inline-flex min-h-11 items-center gap-2 no-underline"
+          >
+            Abrir en Google Maps
+            <span class="text-acento">
+              <Icono nombre="flecha" clase="size-4" grosor={2.2} />
+            </span>
+          </a>
+        </p>
+      </div>
+
+      <div class="flex flex-col rounded-marca border border-borde bg-superficie p-6">
+        <h3 class="flex items-center gap-2.5 font-display text-titulo-3">
+          <span class="text-acento"><Icono nombre="reloj" clase="size-5" /></span>
+          Horario de clases
+        </h3>
+        <p class="mt-3 text-cuerpo text-texto">
+          {SEDE.horario}<br />
+          <span class="dato">{SEDE.horarioDetalle}</span>
+        </p>
+        <p class="mt-3 text-pequeno text-texto-suave">
+          Fuera de ese horario todavía no tenemos una atención presencial con horario fijo. Escríbenos
+          por WhatsApp y coordinamos una visita.
+        </p>
+      </div>
+    </div>
+
+    <p class="mt-5 flex items-start gap-3 text-pequeno text-texto-suave">
+      <span class="mt-0.5 shrink-0 text-texto-suave"><Icono nombre="escudo" clase="size-4" grosor={1.5} /></span>
+      El mapa no está incrustado en esta página a propósito: cargarlo instalaría cookies de Google sin
+      que lo hayas pedido. El enlace lo abre en tu propia aplicación.
+    </p>
+  </Seccion>
+
+  {/* ────────────────────────── Formulario y canales ────────────────────────── */}
+  <Seccion
+    id="formulario"
+    tono="superficie"
+    eyebrow="Escríbenos"
+    titulo="Déjanos tus datos, o escríbenos directo"
+    entrada="Las dos vías llegan al mismo sitio y las lee la misma persona: la que dicta las clases. Detrás de estos mensajes no hay un robot ni un equipo de ventas."
+  >
+    <Formulario prefijo="contacto" titulo="Déjanos tus datos y te escribimos" />
+
+    <h3 class="mt-10 border-t border-borde pt-8 font-display text-titulo-3">
+      O si prefieres escribir directamente
+    </h3>
+
+    <div class="mt-4 grid gap-5 md:grid-cols-2">
+      <div class="flex flex-col rounded-marca border border-borde bg-fondo p-6">
+        <p class="font-mono text-micro tracking-[0.14em] text-acento uppercase">WhatsApp</p>
+        <p class="dato mt-2 text-titulo-3 font-semibold text-texto">
+          {SITIO.contacto.whatsapp.visible}
+        </p>
+        <p class="mt-2 text-pequeno text-pretty text-texto-suave">
+          El canal más rápido. Sirve para reservar la clase demo, preguntar por el programa o
+          matricularse.
+        </p>
+        <p class="mt-auto pt-5">
+          <a
+            href={ENLACE_CONSULTA}
+            rel="noopener noreferrer"
+            target="_blank"
+            class="inline-flex min-h-11 items-center gap-2.5 rounded-full bg-maiz px-6 py-3 font-semibold text-sobre-cta no-underline transition-colors duration-150 hover:bg-maiz/90"
+          >
+            <Icono nombre="mensaje" clase="size-5" grosor={1.8} />
+            Escribir por WhatsApp
+          </a>
+        </p>
+      </div>
+
+      <div class="flex flex-col rounded-marca border border-borde bg-fondo p-6">
+        <p class="font-mono text-micro tracking-[0.14em] text-acento uppercase">Correo</p>
+        <p class="mt-2 text-titulo-3">
+          <a href={`mailto:${SITIO.contacto.correo}`} class="break-all">
+            {SITIO.contacto.correo}
+          </a>
+        </p>
+        <p class="mt-2 text-pequeno text-pretty text-texto-suave">
+          Para colegios, institutos y universidades que quieran coordinar un taller, o para cualquier
+          consulta que necesite quedar por escrito.
+        </p>
+        <p class="mt-auto pt-5 text-pequeno">
+          <a href="/instituciones">Ver la propuesta para instituciones educativas</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-8 rounded-marca border border-borde bg-fondo p-6">
+      <h3 class="font-display text-titulo-3">Qué ayuda a responderte más rápido</h3>
+      <ul class="mt-3 list-none space-y-2 p-0 text-pequeno text-texto-suave">
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 shrink-0 text-acento"><Icono nombre="comprobado" clase="size-3.5" grosor={2.6} /></span>
+          Tu nombre y, si escribes por un menor de edad, tu vínculo con él.
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 shrink-0 text-acento"><Icono nombre="comprobado" clase="size-3.5" grosor={2.6} /></span>
+          Si te interesa la clase demo gratuita o la matrícula directa.
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="mt-1.5 shrink-0 text-acento"><Icono nombre="comprobado" clase="size-3.5" grosor={2.6} /></span>
+          El perfil del alumno: escolar, universitario o público general.
+        </li>
+      </ul>
+      <p class="mt-4 border-t border-borde pt-4 text-pequeno text-texto-suave">
+        No pedimos documentos por WhatsApp ni por correo antes de la matrícula. Si recibes un mensaje
+        que pide eso en nuestro nombre, no es nuestro.{' '}
+        <a href="/privacidad">Cómo tratamos tus datos</a>.
+      </p>
+    </div>
+
+    <p class="mt-6 text-pequeno">
+      ¿Prefieres reservar ya? <a href={ENLACE_DEMO} rel="noopener noreferrer" target="_blank">Reserva la clase demo gratuita</a>.
+    </p>
+  </Seccion>
+
+  <Cierre />
+</PlantillaPagina>

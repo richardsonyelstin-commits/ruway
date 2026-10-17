@@ -1,0 +1,26 @@
+---
+/**
+ * Pendiente — marca un dato que todavía no existe.
+ *
+ * Existe para que la regla «lo que falta va como [POR DEFINIR]» no ensucie el
+ * sitio. Un `[POR DEFINIR]` en texto plano se lee como un error de programación;
+ * así se lee como lo que es, un hueco consciente.
+ *
+ * Se pinta con borde discontinuo y en color de alerta a propósito: tiene que
+ * ser imposible confundirlo con contenido real, tanto en pantalla como en una
+ * captura de pantalla dentro de seis meses.
+ */
+interface Props {
+  /** Qué hay que completar. Se lee solo con lector de pantalla. */
+  descripcion?: string;
+}
+
+const { descripcion = 'Dato pendiente de definir' } = Astro.props;
+---
+
+<span
+  class="dato inline-flex items-center rounded-xs border border-dashed border-alerta px-1.5 py-0.5 align-baseline text-micro leading-normal text-alerta"
+>
+  <span class="visualmente-oculto">{descripcion}: </span>
+  [POR DEFINIR]
+</span>

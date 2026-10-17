@@ -1,0 +1,32 @@
+---
+/**
+ * HOME · Bloque 7 — Resultado
+ *
+ * §5.2: los seis puntos del perfil del egresado, tal como los define el plan.
+ * Es la promesa concreta de la página: no «aprenderás IA», sino seis cosas
+ * verificables.
+ */
+import { RESULTADO_EGRESADO } from '../../data/programa';
+import Seccion from '../Seccion.astro';
+import Icono from '../Icono.astro';
+---
+
+<Seccion
+  id="resultado"
+  eyebrow="Al terminar"
+  titulo="Seis cosas que sabrás hacer"
+  entrada="El 60 % de la evaluación es tu proyecto personal. Lo demás acompaña: asistencia, participación y el portafolio."
+>
+  <ul class="grid list-none gap-x-10 gap-y-5 p-0 md:grid-cols-2">
+    {
+      RESULTADO_EGRESADO.map((punto) => (
+        <li class="flex items-start gap-3">
+          <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-superficie-alta text-exito">
+            <Icono nombre="comprobado" clase="size-4" grosor={2.4} />
+          </span>
+          <p class="text-cuerpo text-pretty text-texto">{punto}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Seccion>

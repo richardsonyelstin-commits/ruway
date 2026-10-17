@@ -1,0 +1,43 @@
+---
+/**
+ * /terminos — matrícula, precios, certificado, faltas y devoluciones.
+ *
+ * Es la página legal que más se va a leer de verdad: es donde un padre busca
+ * qué pasa si su hijo falta, cuánto cuesta exactamente y si el certificado
+ * vale. Por eso las cláusulas están escritas como respuestas y no como
+ * párrafos de contrato, y la tabla de devoluciones está completa.
+ *
+ * El contenido vive en `src/data/legal.ts` (secciones `SECCIONES_TERMINOS`).
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import ContenidoLegal from '../components/ContenidoLegal.astro';
+import Retorno from '../components/Retorno.astro';
+import { conInicio } from '../lib/migajas';
+import { ACTUALIZADO, SECCIONES_TERMINOS } from '../data/legal';
+
+const migajas = conInicio({ etiqueta: 'Términos', href: '/terminos' });
+
+const titulo = 'Términos y condiciones de la matrícula';
+const descripcion =
+  'Condiciones de la matrícula en RUWAY ACADEMY: precios con IGV, grupo mínimo de 7, certificado sin validez MINEDU, faltas y política de devoluciones.';
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="Legal"
+  h1="Términos y condiciones"
+  entrada="Lo que se firma al matricularse, escrito para leerse antes de pagar y no después. El precio, el calendario, el certificado y las devoluciones que están aquí son los mismos que están en el contrato."
+  migajas={migajas}
+>
+  <div class="mx-auto max-w-6xl px-5 py-12 md:py-16">
+    <p class="font-mono text-micro tracking-[0.14em] text-texto-suave uppercase">
+      Última actualización: {ACTUALIZADO}
+    </p>
+    <div class="mt-8">
+      <ContenidoLegal secciones={SECCIONES_TERMINOS} />
+    </div>
+  </div>
+
+  <Retorno />
+</PlantillaPagina>

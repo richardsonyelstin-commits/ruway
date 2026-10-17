@@ -1,0 +1,216 @@
+---
+/**
+ * /instituciones — landing B2B: taller gratuito de una hora.
+ *
+ * Origen: `plan completo.md` §11.1 (canal 3 de captación), §11.4 (alianzas) y
+ * `01-sitemap-final.md` §6.4 (flujo D).
+ *
+ * POR QUÉ EXISTE ESTA PÁGINA
+ *   El canal 3 del plan no vende a un alumno: vende a una institución. Un
+ *   colegio no decide como decide un padre —necesita saber qué es, cuánto dura,
+ *   cuánto cuesta y quién lo autoriza—, y esa conversación no cabe en la Home.
+ *
+ * El sitemap §8 no le asigna anclas porque ningún enlace entra con `#`. Las
+ * secciones llevan `id` igualmente: `Seccion` lo necesita para `aria-labelledby`.
+ */
+import PlantillaPagina from '../layouts/PlantillaPagina.astro';
+import Seccion from '../components/Seccion.astro';
+import Cierre from '../components/Cierre.astro';
+import Icono from '../components/Icono.astro';
+import { conInicio } from '../lib/migajas';
+import { ENLACE_TALLER } from '../lib/whatsapp';
+
+const migajas = conInicio({ etiqueta: 'Instituciones', href: '/instituciones' });
+
+const titulo = 'Talleres de IA para colegios e institutos';
+const descripcion =
+  'Llevamos un taller gratuito de una hora de inteligencia artificial a colegios, institutos y universidades de Cajamarca. Se coordina con la dirección.';
+
+const PASOS = [
+  {
+    titulo: 'Nos escribes',
+    detalle:
+      'Un mensaje por WhatsApp con el nombre de la institución y una persona de contacto basta para empezar.',
+  },
+  {
+    titulo: 'Coordinamos con la dirección',
+    detalle:
+      'Definimos fecha, hora y aula. El taller se da con la autorización de la dirección, no por encima de ella.',
+  },
+  {
+    titulo: 'Damos el taller',
+    detalle:
+      'Una hora, en la institución, con los estudiantes. Al terminar queda claro qué se llevaron y qué pueden seguir haciendo.',
+  },
+] as const;
+
+const ALCANCE = [
+  { nombre: 'Colegios', detalle: 'De 3.º a 5.º de secundaria, con autorización de la dirección.' },
+  { nombre: 'Institutos', detalle: 'Carreras técnicas y de formación para el trabajo.' },
+  { nombre: 'Universidades', detalle: 'Charlas en aula y apoyo a clubes estudiantiles locales.' },
+  {
+    nombre: 'Asociaciones y municipalidad',
+    detalle: 'Charlas para emprendedores y actividades locales abiertas.',
+  },
+] as const;
+---
+
+<PlantillaPagina
+  titulo={titulo}
+  descripcion={descripcion}
+  eyebrow="Para instituciones educativas"
+  h1="Llevamos una hora de IA real a tu institución"
+  entrada="Un taller gratuito, presencial y sin costo para el colegio, el instituto o la universidad. Se coordina con la dirección y se da frente a los estudiantes, no a los profesores."
+  migajas={migajas}
+>
+  {/* ─────────────────────────────── Taller ─────────────────────────────── */}
+  <Seccion
+    id="taller"
+    eyebrow="El taller"
+    titulo="Una hora para ver la IA funcionando"
+    entrada="La idea no es contar qué es la inteligencia artificial, sino mostrar el tipo de ejercicio que un estudiante de secundaria es capaz de resolver por su cuenta al terminar el programa."
+  >
+    <ul class="grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2">
+      <li class="flex items-start gap-4 bg-superficie px-5 py-5">
+        <span class="mt-0.5 shrink-0 text-acento"><Icono nombre="reloj" clase="size-5" /></span>
+        <div>
+          <p class="font-medium text-texto">Una hora</p>
+          <p class="mt-0.5 text-pequeno text-texto-suave">
+            Se adapta al bloque horario que tenga la institución.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4 bg-superficie px-5 py-5">
+        <span class="mt-0.5 shrink-0 text-acento"><Icono nombre="comprobado" clase="size-5" /></span>
+        <div>
+          <p class="font-medium text-texto">Sin costo para la institución</p>
+          <p class="mt-0.5 text-pequeno text-texto-suave">
+            Ni tarifa, ni compra de materiales, ni cuota de los estudiantes.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4 bg-superficie px-5 py-5">
+        <span class="mt-0.5 shrink-0 text-acento"><Icono nombre="escudo" clase="size-5" /></span>
+        <div>
+          <p class="font-medium text-texto">Con autorización de la dirección</p>
+          <p class="mt-0.5 text-pequeno text-texto-suave">
+            Se coordina con la dirección antes de entrar al aula.
+          </p>
+        </div>
+      </li>
+      <li class="flex items-start gap-4 bg-superficie px-5 py-5">
+        <span class="mt-0.5 shrink-0 text-acento"><Icono nombre="usuarios" clase="size-5" /></span>
+        <div>
+          <p class="font-medium text-texto">Grupo completo</p>
+          <p class="mt-0.5 text-pequeno text-texto-suave">
+            Es para el aula entera, no para un grupo reducido de elegidos.
+          </p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="mt-8 rounded-marca border border-borde border-l-4 border-l-maiz bg-superficie p-6">
+      <h3 class="font-display text-titulo-3">Qué buscamos y qué no</h3>
+      <div class="mt-4 grid gap-6 sm:grid-cols-2">
+        <div>
+          <p class="font-mono text-micro tracking-[0.14em] text-texto-suave uppercase">Lo que hacemos</p>
+          <ul class="mt-3 list-none space-y-2 p-0 text-pequeno text-texto">
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 shrink-0 text-exito"><Icono nombre="comprobado" clase="size-4" grosor={2.4} /></span>
+              Mostrar la herramienta funcionando, no describirla.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 shrink-0 text-exito"><Icono nombre="comprobado" clase="size-4" grosor={2.4} /></span>
+              Decir también los límites: la IA se equivoca y hay que saber cuándo.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 shrink-0 text-exito"><Icono nombre="comprobado" clase="size-4" grosor={2.4} /></span>
+              Dejar una idea clara de por dónde se empieza si quieren seguir.
+            </li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-mono text-micro tracking-[0.14em] text-texto-suave uppercase">Lo que no</p>
+          <ul class="mt-3 list-none space-y-2 p-0 text-pequeno text-texto">
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 shrink-0 text-alerta"><Icono nombre="chevron" clase="size-4" grosor={2.4} /></span>
+              No pedimos datos de los estudiantes en el taller.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 shrink-0 text-alerta"><Icono nombre="chevron" clase="size-4" grosor={2.4} /></span>
+              No es una actividad obligatoria ni calificada.
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-0.5 shrink-0 text-alerta"><Icono nombre="chevron" clase="size-4" grosor={2.4} /></span>
+              No hay compromiso de compra para nadie: ni para el colegio ni para las familias.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </Seccion>
+
+  {/* ──────────────────────────── Cómo se coordina ─────────────────────── */}
+  <Seccion
+    id="como-funciona"
+    tono="superficie"
+    eyebrow="Cómo se coordina"
+    titulo="Tres mensajes y quedamos"
+    entrada="Sin convenios, sin trámites y sin papeleo previo. La autorización de la dirección se pide directamente, como cualquier actividad que entra a un aula."
+  >
+    <ol class="grid list-none gap-5 p-0 md:grid-cols-3">
+      {
+        PASOS.map((paso, indice) => (
+          <li class="flex gap-5 rounded-marca border border-borde bg-fondo p-6">
+            <p
+              class="dato shrink-0 font-display text-titulo-2 leading-none font-semibold text-acento"
+              aria-hidden="true"
+            >
+              {String(indice + 1).padStart(2, '0')}
+            </p>
+            <div>
+              <h3 class="font-display text-titulo-3 text-balance">{paso.titulo}</h3>
+              <p class="mt-2 text-pequeno text-pretty text-texto-suave">{paso.detalle}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-6 text-pequeno">
+      ¿Prefieres empezar por WhatsApp? <a href={ENLACE_TALLER} rel="noopener noreferrer" target="_blank">Solicita el taller</a> y te respondemos con las fechas disponibles.
+    </p>
+  </Seccion>
+
+  {/* ─────────────────────────────── Alcance ───────────────────────────── */}
+  <Seccion
+    id="alcance"
+    eyebrow="A quién va dirigido"
+    titulo="No solo colegios"
+    entrada="El taller gratuito es la puerta, pero trabajamos con toda la comunidad educativa de Cajamarca."
+  >
+    <ul class="grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2">
+      {
+        ALCANCE.map((item) => (
+          <li class="bg-superficie px-5 py-5">
+            <p class="font-medium text-texto">{item.nombre}</p>
+            <p class="mt-1 text-pequeno text-pretty text-texto-suave">{item.detalle}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-6 max-w-2xl text-pequeno text-pretty text-texto-suave">
+      Después del taller, el camino es el mismo para quien quiera seguir: una clase demo gratuita en la
+      academia y, si le convence, la matrícula en el programa de 8 semanas. Si el taller hace que el
+      aula conozca la academia, ya cumplió su función; el resto lo decide cada familia.
+    </p>
+  </Seccion>
+
+  <Cierre
+    titulo="Llevemos el taller a tu institución"
+    texto="Una hora, sin costo y sin compromiso. Coordinamos la fecha con la dirección."
+    accionPrincipal={{ etiqueta: 'Solicitar taller por WhatsApp', href: ENLACE_TALLER }}
+    accionSecundaria={{ etiqueta: 'Ver el programa', href: '/programa' }}
+  />
+</PlantillaPagina>

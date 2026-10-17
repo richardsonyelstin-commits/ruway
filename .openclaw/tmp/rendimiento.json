@@ -1,0 +1,457 @@
+{
+  "fecha": "2026-10-17T04:06:11.767Z",
+  "minimo": 95,
+  "informe": [
+    {
+      "ruta": "/",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1658,
+      "cls": 0.0019,
+      "tbt": 0,
+      "pesoHtmlCss": 17920,
+      "fuentes": 93564,
+      "total": 120128
+    },
+    {
+      "ruta": "/programa",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1657,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 16921,
+      "fuentes": 93564,
+      "total": 119129
+    },
+    {
+      "ruta": "/precios",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1657,
+      "cls": 0.0001,
+      "tbt": 0,
+      "pesoHtmlCss": 14739,
+      "fuentes": 93564,
+      "total": 116947
+    },
+    {
+      "ruta": "/preguntas-frecuentes",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1656,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 15134,
+      "fuentes": 93564,
+      "total": 117342
+    },
+    {
+      "ruta": "/sobre",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1657,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 14526,
+      "fuentes": 93564,
+      "total": 116734
+    },
+    {
+      "ruta": "/contacto",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1660,
+      "cls": 0.0172,
+      "tbt": 0,
+      "pesoHtmlCss": 16216,
+      "fuentes": 93564,
+      "total": 121046
+    },
+    {
+      "ruta": "/instituciones",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1659,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 14231,
+      "fuentes": 93564,
+      "total": 116439
+    },
+    {
+      "ruta": "/inscripcion",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1660,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 16448,
+      "fuentes": 93564,
+      "total": 121278
+    },
+    {
+      "ruta": "/gracias",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "lcp": 1656,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 12884,
+      "fuentes": 93564,
+      "total": 115092
+    },
+    {
+      "ruta": "/privacidad",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1657,
+      "cls": 0.0066,
+      "tbt": 0,
+      "pesoHtmlCss": 14824,
+      "fuentes": 93564,
+      "total": 117032
+    },
+    {
+      "ruta": "/terminos",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1656,
+      "cls": 0.0071,
+      "tbt": 0,
+      "pesoHtmlCss": 15802,
+      "fuentes": 93564,
+      "total": 118010
+    },
+    {
+      "ruta": "/cookies",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 1657,
+      "cls": 0,
+      "tbt": 0,
+      "pesoHtmlCss": 14578,
+      "fuentes": 93564,
+      "total": 116786
+    },
+    {
+      "ruta": "/404",
+      "perfil": "móvil 4G",
+      "puntajes": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "lcp": 1657,
+      "cls": 0.0001,
+      "tbt": 0,
+      "pesoHtmlCss": 12327,
+      "fuentes": 93564,
+      "total": 114535
+    },
+    {
+      "ruta": "/",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 367,
+      "cls": 0.0019,
+      "tbt": 0,
+      "pesoHtmlCss": 17920,
+      "fuentes": 93564,
+      "total": 120128
+    },
+    {
+      "ruta": "/programa",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 368,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 16921,
+      "fuentes": 93564,
+      "total": 119129
+    },
+    {
+      "ruta": "/precios",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 370,
+      "cls": 0.0091,
+      "tbt": 0,
+      "pesoHtmlCss": 14739,
+      "fuentes": 93564,
+      "total": 116947
+    },
+    {
+      "ruta": "/preguntas-frecuentes",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 372,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 15134,
+      "fuentes": 93564,
+      "total": 117342
+    },
+    {
+      "ruta": "/sobre",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 369,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 14526,
+      "fuentes": 93564,
+      "total": 116734
+    },
+    {
+      "ruta": "/contacto",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 370,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 16216,
+      "fuentes": 93564,
+      "total": 121046
+    },
+    {
+      "ruta": "/instituciones",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 367,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 14231,
+      "fuentes": 93564,
+      "total": 116439
+    },
+    {
+      "ruta": "/inscripcion",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 368,
+      "cls": 0.0127,
+      "tbt": 0,
+      "pesoHtmlCss": 16448,
+      "fuentes": 93564,
+      "total": 121278
+    },
+    {
+      "ruta": "/gracias",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "lcp": 368,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 12884,
+      "fuentes": 93564,
+      "total": 115092
+    },
+    {
+      "ruta": "/privacidad",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 369,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 14824,
+      "fuentes": 93564,
+      "total": 117032
+    },
+    {
+      "ruta": "/terminos",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 367,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 15802,
+      "fuentes": 93564,
+      "total": 118010
+    },
+    {
+      "ruta": "/cookies",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcp": 368,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 14578,
+      "fuentes": 93564,
+      "total": 116786
+    },
+    {
+      "ruta": "/404",
+      "perfil": "escritorio",
+      "puntajes": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 69
+      },
+      "lcp": 366,
+      "cls": 0.0004,
+      "tbt": 0,
+      "pesoHtmlCss": 12327,
+      "fuentes": 93564,
+      "total": 114535
+    }
+  ],
+  "sinIndexar": [
+    {
+      "ruta": "/gracias",
+      "perfil": "móvil 4G",
+      "seo": 69,
+      "motivo": "lleva «noindex, follow» a propósito (ADR-020): no aporta nada a un buscador",
+      "auditoria": "is-crawlable",
+      "confirmada": true
+    },
+    {
+      "ruta": "/404",
+      "perfil": "móvil 4G",
+      "seo": 69,
+      "motivo": "es la página de error: también va con «noindex, follow» a propósito",
+      "auditoria": "is-crawlable",
+      "confirmada": true
+    },
+    {
+      "ruta": "/gracias",
+      "perfil": "escritorio",
+      "seo": 69,
+      "motivo": "lleva «noindex, follow» a propósito (ADR-020): no aporta nada a un buscador",
+      "auditoria": "is-crawlable",
+      "confirmada": true
+    },
+    {
+      "ruta": "/404",
+      "perfil": "escritorio",
+      "seo": 69,
+      "motivo": "es la página de error: también va con «noindex, follow» a propósito",
+      "auditoria": "is-crawlable",
+      "confirmada": true
+    }
+  ],
+  "fallos": []
+}

@@ -1,0 +1,41 @@
+---
+/**
+ * HOME · Bloque 6 — Herramientas
+ *
+ * §8.3 y la regla del §8.3: el programa debe poder dictarse íntegramente con
+ * planes gratuitos, y si una herramienta cambia sus condiciones, se sustituye
+ * sin costo para el alumno.
+ *
+ * Se escriben como TEXTO, no como logotipos de terceros: usar las marcas
+ * ajenas exige permiso, y aquí lo que importa es la vigencia del contenido,
+ * no la marca. Además, sin imágenes externas el bloque pesa cero.
+ */
+import { HERRAMIENTAS } from '../../data/programa';
+import Seccion from '../Seccion.astro';
+---
+
+<Seccion
+  id="herramientas"
+  tono="superficie"
+  eyebrow="Con qué vas a trabajar"
+  titulo="Herramientas reales, todas en su plan gratuito"
+  entrada="No enseñamos una herramienta: enseñamos a elegir. Si una plataforma cambia sus condiciones, se sustituye y el alumno no paga la diferencia."
+>
+  <ul class="grid list-none gap-px overflow-hidden rounded-marca border border-borde bg-borde p-0 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      HERRAMIENTAS.map((herramienta) => (
+        <li class="flex flex-col gap-1 bg-fondo px-5 py-5">
+          <p class="font-mono text-pequeno font-semibold tracking-tight text-texto">
+            {herramienta.nombre}
+          </p>
+          <p class="text-pequeno text-texto-suave">{herramienta.uso}</p>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="mt-5 text-pequeno text-texto-suave">
+    Los planes gratuitos tienen límites de uso. Cuando aparecen, el docente explica cómo trabajar
+    dentro de ellos en lugar de pedirte una suscripción.
+  </p>
+</Seccion>

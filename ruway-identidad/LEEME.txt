@@ -1,0 +1,38 @@
+RUWAY · Escuela de IA · Cajamarca
+Kit de logotipos
+================================
+
+CONTENIDO
+01-logo-horizontal        Marca + nombre en una línea (uso general)
+02-logo-vertical          Marca arriba y nombre abajo (redes, portadas, sellos)
+03-logo-con-descriptor    Horizontal con «ESCUELA DE IA · CAJAMARCA» (afiches, membretes)
+04-logotipo-solo-texto    Solo la palabra «ruway»
+05-isotipo                Solo la marca (el canal y el punto) dentro de su cuadrado
+06-trazo-sin-fondo        Solo el trazo, sin cuadrado
+07-avatares-e-insignias   Foto de perfil circular e insignias de los 3 niveles
+08-iconos-app-y-favicon   Icono de app (1024) y favicons
+
+CUÁL USAR (sufijo del archivo)
+claro       fondos blancos o claros
+oscuro      fondos oscuros (Piedra, negro, fotos oscuras)
+sobre-maiz  sobre fondo Maíz
+sobre-teja  sobre fondo Teja
+negro       una sola tinta negra (sellos, fotocopias, grabado)
+blanco      una sola tinta blanca sobre fondos de color o fotos
+
+FORMATOS
+SVG  vectorial, el texto ya está convertido a curvas (no necesita instalar la tipografía). Úsalo para imprenta y para escalar.
+PNG  con fondo transparente, para web, redes y documentos.
+
+COLORES
+Piedra  #14171E     Cal  #F3F1EA     Maíz  #F0B429
+Teja    #BE3A1B     Ichu #1F6B4F     Niebla #9AA0AE
+
+TIPOGRAFÍAS (gratuitas en Google Fonts)
+Bricolage Grotesque (títulos) · Instrument Sans (texto) · JetBrains Mono (etiquetas)
+
+REGLAS BÁSICAS
+- Margen libre alrededor del logo: un escalón (20 % del lado de la marca).
+- Tamaño mínimo: marca sola 24 px / 8 mm; con nombre, 96 px de ancho.
+- No estirar, no girar, no cambiar los colores, no añadir sombras ni degradados.
+- Los archivos tienen el recorte ajustado al dibujo: añade tú el margen libre al maquetar.

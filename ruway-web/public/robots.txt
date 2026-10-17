@@ -1,0 +1,10 @@
+# RUWAY
+User-agent: *
+Allow: /
+Disallow: /gracias
+
+# Recursos de marca: permitidos para compartir en redes
+User-agent: *
+Allow: /logos/
+
+Sitemap: https://academiaruway.com/sitemap-index.xml
